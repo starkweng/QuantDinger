@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H5 AI Trading Command Center - 三轮需求打磨</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --paper: #ffffff;
+      --ink: #111827;
+      --muted: #657083;
+      --soft: #8b96a8;
+      --line: #dbe3ec;
+      --line-strong: #c3cfdd;
+      --nav: #111927;
+      --blue: #1769e0;
+      --blue-soft: #e7f0ff;
+      --teal: #087f78;
+      --teal-soft: #e1f5f2;
+      --green: #0b7d52;
+      --green-soft: #e5f5ed;
+      --amber: #a86900;
+      --amber-soft: #fff3d9;
+      --red: #bf2f45;
+      --red-soft: #ffedf0;
+      --violet: #6852c8;
+      --violet-soft: #f0edff;
+      --shadow: 0 16px 42px rgba(17, 24, 39, .08);
+      --radius: 8px;
+      --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.62;
+      letter-spacing: 0;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 18px 14px;
+      background: var(--nav);
+      color: #dbe7f5;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--nav);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .brand strong { display: block; font-size: 14px; }
+    .brand span { display: block; margin-top: 2px; color: #9cacbf; font-size: 11px; }
+
+    .nav { display: grid; gap: 5px; }
+    .nav a {
+      min-height: 39px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      color: #b8c6d6;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .nav a:hover, .nav a.active { background: #1f3148; color: #fff; }
+    .nav i {
+      width: 14px;
+      height: 14px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      opacity: .75;
+    }
+
+    .side-meta {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      color: #95a7bd;
+      font-size: 11px;
+      line-height: 1.75;
+    }
+
+    main {
+      min-width: 0;
+      padding: 24px 28px 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      margin: -24px -28px 18px;
+      padding: 15px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(244, 246, 248, .94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar h1 { margin: 0; font-size: 21px; line-height: 1.2; }
+    .topbar p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .top-actions a {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .top-actions a.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .section {
+      margin-bottom: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f9fbfd;
+    }
+    .section-head h2 { margin: 0; font-size: 16px; line-height: 1.34; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .section-body { padding: 18px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(290px, .65fr);
+      gap: 14px;
+    }
+    .hero-card {
+      min-height: 100%;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #fff, #f8fbff);
+    }
+    .hero-card h2 {
+      margin: 0;
+      max-width: 920px;
+      font-size: 29px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+    .hero-card p {
+      margin: 12px 0 0;
+      max-width: 94ch;
+      color: var(--muted);
+    }
+
+    .metric-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .metric {
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .metric b { display: block; margin-top: 4px; font-size: 20px; line-height: 1.18; }
+    .metric small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+
+    .badge {
+      min-height: 23px;
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f6f8fb;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .badge.blue { background: var(--blue-soft); border-color: #b7d3fb; color: var(--blue); }
+    .badge.green { background: var(--green-soft); border-color: #bde7d4; color: var(--green); }
+    .badge.amber { background: var(--amber-soft); border-color: #f0cf8b; color: var(--amber); }
+    .badge.red { background: var(--red-soft); border-color: #f3b7c1; color: var(--red); }
+    .badge.teal { background: var(--teal-soft); border-color: #b3e3dd; color: var(--teal); }
+    .badge.violet { background: var(--violet-soft); border-color: #cbc2f5; color: var(--violet); }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 12px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .panel {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .panel.shaded { background: #f8fbfd; }
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .panel p { margin: 0; color: var(--muted); font-size: 13px; }
+    .panel ul { margin: 9px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .panel li + li { margin-top: 6px; }
+
+    .callout {
+      margin-top: 12px;
+      padding: 13px 14px;
+      border: 1px solid #b9d4fb;
+      border-radius: var(--radius);
+      background: var(--blue-soft);
+      color: #173b68;
+      font-size: 13px;
+    }
+    .callout.amber { border-color: #f0cf8b; background: var(--amber-soft); color: #694500; }
+    .callout.red { border-color: #f3b7c1; background: var(--red-soft); color: #792034; }
+    .callout.green { border-color: #bde7d4; background: var(--green-soft); color: #164d38; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #f5f8fb;
+      color: #344256;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    tr:last-child td { border-bottom: none; }
+    td { color: var(--muted); }
+    td strong { color: var(--ink); }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+    .round {
+      display: grid;
+      grid-template-columns: 118px minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .round b {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+    }
+    .round span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      min-height: 30px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .round p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .capability {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+    }
+    .capability + .capability { margin-top: 10px; }
+    .cap-name {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      background: #f7fafc;
+    }
+    .cap-name b { display: block; font-size: 14px; }
+    .cap-name span { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .cap-body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .cap-row {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 10px;
+    }
+    .cap-row strong { color: var(--ink); font-size: 12px; }
+    .cap-row p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .flow-node {
+      min-height: 128px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .flow-node span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 24px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: #eff4fa;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .flow-node b { display: block; font-size: 14px; }
+    .flow-node p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+
+    .code {
+      margin-top: 12px;
+      padding: 13px;
+      overflow: auto;
+      border: 1px solid #ced8e4;
+      border-radius: var(--radius);
+      background: #101827;
+      color: #dce7f5;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre;
+    }
+
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .source-list a {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: #334155;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .source-list a:hover { border-color: #9dc2f4; background: #f7fbff; }
+
+    .feedback textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      padding: 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: #fff;
+      font: 13px/1.6 var(--sans);
+    }
+    .feedback .hint { margin-top: 8px; color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .hero-grid, .grid-2, .grid-3, .grid-4, .flow, .source-list { grid-template-columns: 1fr; }
+      .capability { grid-template-columns: 1fr; }
+      .cap-name { border-right: none; border-bottom: 1px solid var(--line); }
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 18px 14px 40px; }
+      .topbar { position: static; margin: -18px -14px 14px; padding: 14px; display: grid; }
+      .nav { grid-template-columns: 1fr; }
+      .hero-card h2 { font-size: 24px; }
+      .round { grid-template-columns: 1fr; }
+      .cap-row { grid-template-columns: 1fr; gap: 4px; }
+      table { font-size: 12px; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">H5</div>
+        <div>
+          <strong>需求三轮打磨</strong>
+          <span>Requirements v0.2</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="active" href="#summary"><i></i><span>总裁结论</span></a>
+        <a href="#rounds"><i></i><span>三轮打磨</span></a>
+        <a href="#capabilities"><i></i><span>八大能力</span></a>
+        <a href="#architecture"><i></i><span>系统架构</span></a>
+        <a href="#data-model"><i></i><span>数据模型</span></a>
+        <a href="#states"><i></i><span>状态机</span></a>
+        <a href="#acceptance"><i></i><span>验收标准</span></a>
+        <a href="#roadmap"><i></i><span>开发路径</span></a>
+        <a href="#security"><i></i><span>安全边界</span></a>
+        <a href="#sources"><i></i><span>来源</span></a>
+      </nav>
+      <div class="side-meta">
+        Date: 2026-05-24<br>
+        Scope: H5 x QuantDinger<br>
+        Method: three-round requirements refinement<br>
+        Rule: no LLM-direct live order
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>H5 AI Trading Command Center 三轮需求打磨</h1>
+          <p>目标：把 research、技术判断、量化交易、通知、自我交易、风控资管、安全、自我成长变成可开发需求。</p>
+        </div>
+        <div class="top-actions">
+          <a href="#capabilities">看八大能力</a>
+          <a class="primary" href="#roadmap">看开发路径</a>
+        </div>
+      </header>
+
+      <section class="section" id="summary">
+        <div class="section-body hero-grid">
+          <div class="hero-card">
+            <h2>结论：这套系统能做，但必须做成“受控自驱交易系统”，不是“自由自嗨交易机器人”。</h2>
+            <p>八大能力可以形成闭环：Research 负责信息处理，技术判断负责市场结构和工程可执行性，量化交易负责规则化验证，实时通知负责触达与审批，自我交易负责受控执行，风控资管负责最大亏损边界，安全保障负责权限与密钥，自我成长负责复盘和策略晋级。核心原则是：AI 可以越来越会判断，但不能越来越自由地下真钱单。</p>
+            <div class="callout">
+              最重要的需求定义：系统不仅要告诉你“做什么”，还要高质量地告诉你“为什么不做”。不交易、等价格走到预案点、认输退出，都是一等公民能力。
+            </div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><span>Product Shape</span><b>Command Center</b><small>研究、策略、风控、执行、复盘一体。</small></div>
+            <div class="metric"><span>First Mode</span><b>Signal + Paper</b><small>先证明工作流，不急着真钱。</small></div>
+            <div class="metric"><span>Hard Gate</span><b>Risk Kernel</b><small>所有交易动作先过确定性风控。</small></div>
+            <div class="metric"><span>Growth Loop</span><b>Evidence Driven</b><small>升级靠结果证据，不靠模型自信。</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="rounds">
+        <div class="section-head">
+          <div>
+            <h2>1. 三轮需求打磨</h2>
+            <p>把愿景逐轮压成边界、模块和验收标准。</p>
+          </div>
+          <span class="badge blue">Three rounds</span>
+        </div>
+        <div class="section-body">
+          <div class="timeline">
+            <div class="round">
+              <div><span>Round 1</span><b>能力定义</b></div>
+              <p>先定义“做到”是什么意思。Research 不是聊天总结，而是带来源、时间戳、反方意见、置信度和行动影响的 evidence packet；自我交易不是放任自动下单，而是在前端授权、风控通过、状态机允许后生成或执行订单意图；自我成长不是自动改生产策略，而是复盘、归因、生成候选改进并走影子验证。</p>
+            </div>
+            <div class="round">
+              <div><span>Round 2</span><b>系统落地</b></div>
+              <p>把能力落成 8 个子系统：Source Hub、Research Desk、H5 Technical Engine、Strategy Lab、Event & Notification Bus、Execution Desk、Risk & Treasury Kernel、Security & Growth Loop。每个子系统有输入、输出、权限、失败模式和审计记录。</p>
+            </div>
+            <div class="round">
+              <div><span>Round 3</span><b>验收开发</b></div>
+              <p>把需求变成可开发路径：P0 做只读数据、research packet、H5 评分、场景推演、Risk Kernel、通知和 paper；P1 做 Pine/Python 回测一致性、shadow、半自动挂单草稿；P2 才做小额白名单 live；P3 才谈多市场自动交易。</p>
+            </div>
+          </div>
+
+          <div class="callout amber">
+            三轮打磨后的产品判断：第一版不是追求功能全，而是追求纪律强。一个能每天帮你少犯错、少乱做、少重仓、少追涨杀跌的系统，比一个会生成很多信号的系统更有价值。
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="capabilities">
+        <div class="section-head">
+          <div>
+            <h2>2. 八大能力需求定义</h2>
+            <p>每个能力都用“输入、处理、输出、验收、边界”定义。</p>
+          </div>
+          <span class="badge green">Capability spec</span>
+        </div>
+        <div class="section-body">
+          <div class="capability">
+            <div class="cap-name"><b>Research</b><span>信息处理与证据包</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能围绕标的/主题自动收集行情、新闻、宏观、链上、公告、社媒和历史交易结果，产出带来源、时间戳、矛盾点和行动影响的 research packet。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Source Hub + 多 agent：Source Collector、Macro/News、Market Microstructure、Bull/Bear Debate、Risk Analyst、Editor。输出只进 Decision Packet，不直接生成订单。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>每份报告至少包含 3 类来源、明确 stale warning、反方观点、证据强弱评级、对 H5 场景 A/B/C/D 的影响。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>无来源不下结论；过期来源降权；社媒情绪只能作为辅助证据，不能替代价格和风险。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>技术判断</b><span>市场结构与工程可执行性</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能用 H5 框架判断市场所处阶段、中轴级别、波动状态、Keltner/ATR 距离、均线成本、2B/假突破、量价分歧和盈亏比。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>H5 Technical Engine 把 Excel 规则字段化为 StrategySpec；中轴随品种波动和交易时长选择；日内优先 5m/15m，波动极端时自动提示降级或缩仓。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>任何信号卡必须显示：当前结构、触发条件、失效条件、最多亏多少、目标空间、是否值得等待。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>Keltner、Wyckoff、MA、VSA 都是证据层，不是宗教；评分达标也只能进入风控，不等于可下单。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>量化交易</b><span>规则化、回测、纸面、影子</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能把 H5 策略方案转成可版本化的 StrategySpec，并导出 Pine 快速回测、Python 严肃回测、paper order、shadow signal。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Strategy Registry + Backtest Lab + Paper Simulator。所有策略保存代码 hash、参数快照、数据范围、手续费、滑点和样本外表现。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>策略升级必须同时具备：Pine 规则可跑、Python 结果一致、paper 至少 2-4 周、最大回撤和风控拒绝记录可查。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>禁止只看收益率升级；禁止暴力调参后直接实盘；禁止把历史拟合当成未来优势。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>实时通知</b><span>事件触达与审批</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能对 research 完成、信号触发、风险拒绝、挂单待批、订单成交、止损、异常、日损接近阈值等事件实时通知。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Event Bus + Notification Router，支持 Telegram、Slack、Email、Webhook，后续可接 WeChat/Push。消息带事件等级、过期时间、审批按钮或回链。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>P0 通知延迟小于 5 秒；重复事件自动合并；高风险事件必须多通道；每条通知可回溯到 decision/order/risk id。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>通知不是执行；TradingView webhook 只能作为外部触发源，进入系统后必须重新检查价格、时间戳、风控和持仓状态。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>自我交易</b><span>受控自主执行</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能在不同模式下完成从信号到订单意图再到执行的流程：SIGNAL_ONLY、PAPER、SEMI_AUTO、AUTO_API。每一级都有权限、额度和状态机。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Execution Desk 只接受 Risk Kernel 批准后的 order intent；使用 idempotency key、client order id、订单状态同步、撤单和异常恢复。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>SEMI_AUTO 必须前端确认；AUTO_API 只允许白名单策略、白名单标的、小额额度、预设止损、数据新鲜、kill switch 正常。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>LLM 永远不能直接持有交易 API key，不能自行放大仓位，不能自行改变 stop loss，不能绕过人工授权升级模式。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>风控资管</b><span>最大亏损与资金状态机</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能在每个交易前回答：最多亏多少、今日还能亏多少、连续亏损是否触发降级、账户状态是否允许交易、策略预算是否还有试错次数。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Risk & Treasury Kernel：账户级状态机 + 策略级预算模板 + ATR 仓位 + 相关性/流动性/杠杆限制 + 日损和连续亏损降级。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>所有 order intent 都有 max_loss、risk_pct、reward_r、daily_loss_remaining、position_after_order、risk_decision。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>系统可以不知道本单赚多少，但必须知道最多亏多少。收益目标可以推演，亏损边界必须计算。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>安全保障</b><span>权限、密钥、提示注入防御</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能确保 agent、用户、策略、交易所 key、执行 adapter 各有权限边界；任何外部内容不能越权触发交易或泄露密钥。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>RBAC + scoped API keys + secret vault/.env + sandboxed tools + prompt injection filter + signed action + audit log + read/write connector separation。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>无密钥进入 prompt；所有 live action 需要 operator/session/strategy/risk/action hash；安全扫描覆盖 SSRF、prompt injection、excessive agency、API abuse。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>Research agent 只能读；Execution agent 只能执行已批准订单；Risk agent 只能否决或降级，不能创建方向信号。</p></div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="cap-name"><b>自我成长升级</b><span>复盘、记忆、候选晋级</span></div>
+            <div class="cap-body">
+              <div class="cap-row"><strong>做到的定义</strong><p>系统能把每次 research、信号、拒绝、成交、止损、错过机会和用户反馈沉淀为记忆，并周期性生成改进候选。</p></div>
+              <div class="cap-row"><strong>技术路径</strong><p>Decision Ledger + Reflection Worker + Skill/Strategy Curator + Evaluation Harness。学习结果进入候选版本，经过 backtest、paper、shadow 和人工批准再晋级。</p></div>
+              <div class="cap-row"><strong>验收标准</strong><p>每周生成复盘报告：哪些信号有效、哪些被风控救了、哪些错过但不该追、哪些策略需要降级、哪些参数值得候选测试。</p></div>
+              <div class="cap-row"><strong>边界</strong><p>自我成长不能自动改 live 策略；它只能提出版本候选和理由，不能把“我感觉变强了”当成生产部署凭证。</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="section-head">
+          <div>
+            <h2>3. 推荐系统架构</h2>
+            <p>用 QuantDinger 的产品骨架，换成 H5 的决策核心和更硬的风控权限。</p>
+          </div>
+          <span class="badge teal">Architecture</span>
+        </div>
+        <div class="section-body">
+          <div class="flow">
+            <div class="flow-node"><span>01</span><b>Source Hub</b><p>行情、K线、盘口、新闻、链上、公告、TradingView webhook、用户笔记。</p></div>
+            <div class="flow-node"><span>02</span><b>Research Desk</b><p>多 agent 生成 evidence packet、反方观点和行动影响。</p></div>
+            <div class="flow-node"><span>03</span><b>H5 Engine</b><p>中轴、Keltner/ATR、MA 成本、2B、VSA、场景 A/B/C/D。</p></div>
+            <div class="flow-node"><span>04</span><b>Strategy Lab</b><p>StrategySpec、Pine、Python backtest、paper、shadow。</p></div>
+            <div class="flow-node"><span>05</span><b>Risk Kernel</b><p>账户状态、策略预算、仓位、日损、连续亏损、Kill Switch。</p></div>
+            <div class="flow-node"><span>06</span><b>Execution Desk</b><p>Signal、Paper、Semi-auto、Auto API；订单意图和状态同步。</p></div>
+            <div class="flow-node"><span>07</span><b>Notification Bus</b><p>Telegram、Slack、Email、Webhook；审批、异常和复盘提醒。</p></div>
+            <div class="flow-node"><span>08</span><b>Growth Loop</b><p>Decision Ledger、Reflection、候选策略、评估和晋级。</p></div>
+          </div>
+
+          <div class="callout green">
+            架构核心：LLM 在 Research、解释、复盘和候选升级里发挥能力；交易执行由状态机、风控和适配器完成。AI 的聪明用来减少人性错误，不用来绕过纪律。
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="data-model">
+        <div class="section-head">
+          <div>
+            <h2>4. 核心数据模型</h2>
+            <p>先把产品对象建对，后面开发才不会散。</p>
+          </div>
+          <span class="badge violet">Data model</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>对象</th><th>用途</th><th>关键字段</th><th>为什么必要</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>research_missions</strong></td><td>一次研究任务</td><td>symbol, venue, question, horizon, sources_required, status</td><td>让 research 可追踪、可重跑、可复盘。</td></tr>
+              <tr><td><strong>source_evidence</strong></td><td>证据来源</td><td>url, source_type, fetched_at, freshness, quote_hash, reliability</td><td>防止无来源结论和过期信息。</td></tr>
+              <tr><td><strong>decision_packets</strong></td><td>交易决策包</td><td>bias, confidence, bull_case, bear_case, scenarios, final_action</td><td>把多 agent 讨论压成可执行前置材料。</td></tr>
+              <tr><td><strong>strategy_specs</strong></td><td>策略版本</td><td>strategy_id, version, axis_tf, entry_tf, indicators, score_rules</td><td>让 H5 从理念变成版本化规则。</td></tr>
+              <tr><td><strong>scenario_plans</strong></td><td>未来路径预案</td><td>A/B/C/D, trigger, invalidation, action, wait_condition</td><td>落实“不预测，只推演”。</td></tr>
+              <tr><td><strong>risk_policies</strong></td><td>风控规则</td><td>risk_pct, max_daily_loss, max_position, leverage_cap, kill_switch</td><td>风控必须独立于策略和 LLM。</td></tr>
+              <tr><td><strong>order_intents</strong></td><td>订单意图</td><td>side, qty, entry, stop, tp, max_loss, mode, idempotency_key</td><td>执行前先形成可审计对象。</td></tr>
+              <tr><td><strong>execution_events</strong></td><td>执行事件</td><td>submitted, acked, filled, partial, canceled, rejected, error</td><td>处理真实交易中的异步状态。</td></tr>
+              <tr><td><strong>notification_events</strong></td><td>通知事件</td><td>severity, channel, ttl, dedupe_key, action_required</td><td>避免漏报、刷屏和过期审批。</td></tr>
+              <tr><td><strong>reflection_entries</strong></td><td>复盘记忆</td><td>outcome, reason, avoid_next_time, promote_candidate, demote_reason</td><td>让自我成长有事实依据。</td></tr>
+            </tbody>
+          </table>
+
+          <div class="code">Minimal order intent:
+{
+  "intent_id": "oi_20260524_btc_001",
+  "source": "h5_strategy_spec:v0.2",
+  "mode": "PAPER | SEMI_AUTO | AUTO_API",
+  "symbol": "BTCUSDT",
+  "side": "BUY",
+  "entry_type": "LIMIT",
+  "entry_price": 68000,
+  "stop_price": 67220,
+  "take_profit_plan": [{"price": 69600, "qty_pct": 0.5}],
+  "qty": 0.02,
+  "max_loss_usdt": 17.4,
+  "risk_decision": "APPROVED | REJECTED | REDUCE_ONLY",
+  "operator_required": true,
+  "idempotency_key": "riskhash_strategyhash_timestamp"
+}</div>
+        </div>
+      </section>
+
+      <section class="section" id="states">
+        <div class="section-head">
+          <div>
+            <h2>5. 状态机和权限</h2>
+            <p>没有状态机，就没有真正的自我交易和自我成长。</p>
+          </div>
+          <span class="badge amber">State machine</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-3">
+            <div class="panel">
+              <h3>策略状态</h3>
+              <ul>
+                <li>draft：只允许研究和编辑。</li>
+                <li>backtested：允许导出报告，不允许下单。</li>
+                <li>paper：允许模拟订单。</li>
+                <li>shadow：真实行情影子跟踪。</li>
+                <li>semi_auto：可生成挂单草稿，需人工确认。</li>
+                <li>live_locked：小额白名单自动执行。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>账户状态</h3>
+              <ul>
+                <li>normal：按常规风险执行。</li>
+                <li>conservative：缩仓、提高门槛。</li>
+                <li>reduce_only：只减仓，不开新仓。</li>
+                <li>frozen：停止交易，只允许复盘。</li>
+                <li>manual_override：人工接管，但审计继续。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>订单状态</h3>
+              <ul>
+                <li>proposed：策略提出。</li>
+                <li>risk_checked：风控完成。</li>
+                <li>awaiting_approval：等待前端确认。</li>
+                <li>submitted：已提交交易所。</li>
+                <li>acked / partial / filled。</li>
+                <li>canceled / rejected / stale。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="font-size:14px;margin:18px 0 8px;">权限矩阵</h3>
+          <table>
+            <thead>
+              <tr><th>主体</th><th>可读</th><th>可写</th><th>禁止</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Research Agent</strong></td><td>公开数据、研究库、历史决策</td><td>research packet、证据标签</td><td>订单、密钥、风控参数</td></tr>
+              <tr><td><strong>H5 Technical Agent</strong></td><td>K线、指标、StrategySpec</td><td>评分、场景、技术解释</td><td>绕过评分门槛、直接下单</td></tr>
+              <tr><td><strong>Risk Kernel</strong></td><td>账户、持仓、策略预算、订单意图</td><td>批准、拒绝、降级、冻结</td><td>生成方向观点、提高风险预算</td></tr>
+              <tr><td><strong>Execution Adapter</strong></td><td>已批准 order intent</td><td>订单提交、撤单、状态同步</td><td>修改数量、止损、方向</td></tr>
+              <tr><td><strong>Growth Curator</strong></td><td>ledger、结果、复盘、用户反馈</td><td>候选版本、降级建议</td><td>直接修改 live 策略</td></tr>
+              <tr><td><strong>Operator</strong></td><td>全局仪表盘、审计、通知</td><td>模式切换、审批、Kill Switch</td><td>关闭审计、绕过 P0 风控</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="acceptance">
+        <div class="section-head">
+          <div>
+            <h2>6. 验收标准</h2>
+            <p>开发不是“看起来有功能”，而是每个能力都有可测试的通过条件。</p>
+          </div>
+          <span class="badge green">Acceptance</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>能力</th><th>P0 通过标准</th><th>P1 通过标准</th><th>P2 通过标准</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Research</strong></td><td>手动触发任务，生成带来源的 packet</td><td>多 agent 辩论与反方观点</td><td>定时扫描 watchlist 和主题</td></tr>
+              <tr><td><strong>技术判断</strong></td><td>H5 评分卡、场景 A/B/C/D、失效条件</td><td>多周期一致性和中轴自动建议</td><td>实时行情下动态更新场景</td></tr>
+              <tr><td><strong>量化交易</strong></td><td>StrategySpec + Pine 导出草案</td><td>Python 回测、paper、shadow</td><td>策略晋级/降级自动评审</td></tr>
+              <tr><td><strong>实时通知</strong></td><td>Telegram/Slack/Webhook 单通道</td><td>多通道、去重、审批链接</td><td>高风险多通道升级和静默窗口</td></tr>
+              <tr><td><strong>自我交易</strong></td><td>Paper order intent</td><td>Semi-auto 挂单草稿</td><td>小额白名单 AUTO_API</td></tr>
+              <tr><td><strong>风控资管</strong></td><td>单笔最大亏损、日损、仓位限制</td><td>账户状态机、策略预算模板</td><td>组合相关性和多账户限制</td></tr>
+              <tr><td><strong>安全保障</strong></td><td>密钥不进 prompt、审计完整</td><td>RBAC、签名 action、工具沙箱</td><td>红队测试、异常自动冻结</td></tr>
+              <tr><td><strong>自我成长</strong></td><td>每笔决策入 ledger</td><td>周复盘和候选改进</td><td>评估通过后半自动晋级申请</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout red">
+            任何一个 P0 风控或审计项未通过，都不允许进入 live adapter。开发可以分阶段，但风控和审计不能后补。
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="roadmap">
+        <div class="section-head">
+          <div>
+            <h2>7. 推荐开发路径</h2>
+            <p>把“能做”拆成能交付的版本。</p>
+          </div>
+          <span class="badge blue">Roadmap</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-4">
+            <div class="panel">
+              <h3>P0：AI 交易观察台</h3>
+              <p>2-3 周。完成标的池、Binance 行情、Research Mission、H5 评分、场景推演、Risk Kernel v0、通知、paper intent。</p>
+            </div>
+            <div class="panel">
+              <h3>P1：策略工作台</h3>
+              <p>3-5 周。完成 StrategySpec Editor、Pine 导出、Python backtest、paper simulator、shadow tracker、复盘 ledger。</p>
+            </div>
+            <div class="panel">
+              <h3>P2：半自动执行</h3>
+              <p>4-6 周。完成前端审批、Binance 小额挂单、撤单、订单同步、异常处理、账户状态机、策略预算。</p>
+            </div>
+            <div class="panel">
+              <h3>P3：受控自动交易</h3>
+              <p>持续迭代。只对通过长期 shadow/paper 的策略开放小额白名单；逐步接入 TradFi read-only/paper，再考虑 live。</p>
+            </div>
+          </div>
+
+          <h3 style="font-size:14px;margin:18px 0 8px;">下一步开发文档应拆成 6 个包</h3>
+          <table>
+            <thead>
+              <tr><th>包</th><th>内容</th><th>先后顺序</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>PRD v0.3</strong></td><td>角色、页面、流程、验收标准、No-Go</td><td>1</td></tr>
+              <tr><td><strong>Architecture Spec</strong></td><td>模块、接口、事件、状态机、数据模型</td><td>2</td></tr>
+              <tr><td><strong>StrategySpec Spec</strong></td><td>H5 字段、指标、评分、Pine/Python 映射</td><td>3</td></tr>
+              <tr><td><strong>Risk Kernel Spec</strong></td><td>资金模板、仓位公式、拒绝规则、降级机制</td><td>4</td></tr>
+              <tr><td><strong>Security Spec</strong></td><td>密钥、权限、prompt injection、防滥用、审计</td><td>5</td></tr>
+              <tr><td><strong>Prototype Spec</strong></td><td>H5/desktop 页面、交互、通知、审批、复盘</td><td>6</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="security">
+        <div class="section-head">
+          <div>
+            <h2>8. 安全与失败模式</h2>
+            <p>交易系统最大的安全问题不是黑客，而是系统在错误时还很自信。</p>
+          </div>
+          <span class="badge red">Safety</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>风险</th><th>典型场景</th><th>必须防线</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Prompt Injection</strong></td><td>新闻网页、社媒内容、公告里诱导 agent 泄密或下单</td><td>外部内容隔离为 evidence；agent 无交易密钥；工具 scope 白名单。</td></tr>
+              <tr><td><strong>Excessive Agency</strong></td><td>AI 把研究结论直接升级成交易执行</td><td>Decision Packet 与 Order Intent 分离；Risk Kernel 和前端审批硬门。</td></tr>
+              <tr><td><strong>数据延迟</strong></td><td>TradingView webhook 到达时价格已过期</td><td>重新拉取当前价格、盘口、时间戳；过期事件标记 stale。</td></tr>
+              <tr><td><strong>部分成交</strong></td><td>订单只成交一部分，止损/止盈未同步</td><td>user data stream 同步；position reconciler；异常冻结。</td></tr>
+              <tr><td><strong>连续亏损</strong></td><td>策略短期失效但仍持续交易</td><td>连续亏损降级、日损冻结、策略预算耗尽后只复盘。</td></tr>
+              <tr><td><strong>过拟合升级</strong></td><td>参数只在历史数据漂亮</td><td>walk-forward、样本外、paper/shadow、候选版本审批。</td></tr>
+              <tr><td><strong>密钥滥用</strong></td><td>API key 被日志、prompt 或前端泄露</td><td>secret vault/.env、最小权限 key、IP 白名单、日志脱敏。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="feedback">
+        <div class="section-head">
+          <div>
+            <h2>9. 修改建议区</h2>
+            <p>这里是本地备注区，方便你边看边写意见。</p>
+          </div>
+          <span class="badge teal">Review notes</span>
+        </div>
+        <div class="section-body feedback">
+          <textarea id="notes" placeholder="你可以在这里写修改意见，例如：P0 不要先做 Pine、通知先接 Telegram、风控模板再细化、页面要加某个模块。"></textarea>
+          <div class="hint">备注会保存在当前浏览器的 localStorage，刷新后仍在。</div>
+        </div>
+      </section>
+
+      <section class="section" id="sources">
+        <div class="section-head">
+          <div>
+            <h2>10. 本轮验证来源</h2>
+            <p>需求判断结合了现有 H5 记忆、QuantDinger/TradingAgents 产品资料和官方 API 文档。</p>
+          </div>
+          <span class="badge blue">Sources</span>
+        </div>
+        <div class="section-body">
+          <div class="source-list">
+            <a href="https://www.quantdinger.com/docs.html" target="_blank" rel="noreferrer">QuantDinger Docs：AI 分析、Python 策略、回测、live execution、通知和部署</a>
+            <a href="https://github.com/TauricResearch/TradingAgents" target="_blank" rel="noreferrer">TradingAgents GitHub：多 agent、Bull/Bear debate、Risk/Portfolio Manager、Decision log</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams" target="_blank" rel="noreferrer">Binance Spot WebSocket：实时 kline、trade、ticker、连接限制</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/user-data-stream" target="_blank" rel="noreferrer">Binance User Data Stream：账户、余额、订单状态实时推送</a>
+            <a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams" target="_blank" rel="noreferrer">Binance Futures WebSocket：market/private streams、24h 连接和频率限制</a>
+            <a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Order" target="_blank" rel="noreferrer">Binance Futures New Order：订单端点、参数、client order id、rate limit</a>
+            <a href="https://www.tradingview.com/support/solutions/43000529348/" target="_blank" rel="noreferrer">TradingView Webhook Alerts：alert webhook、JSON、2FA 要求</a>
+            <a href="https://www.tradingview.com/pine-script-docs/concepts/strategies/" target="_blank" rel="noreferrer">TradingView Pine Strategies：broker emulator、strategy order、回测限制</a>
+            <a href="https://core.telegram.org/bots/api" target="_blank" rel="noreferrer">Telegram Bot API：sendMessage、HTTPS Bot API、通知能力</a>
+            <a href="https://api.slack.com/messaging/webhooks" target="_blank" rel="noreferrer">Slack Incoming Webhooks：JSON payload 通知通道</a>
+            <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noreferrer">OWASP LLM Top 10：Prompt Injection、Excessive Agency、Overreliance</a>
+            <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/backtesting-and-simulation" target="_blank" rel="noreferrer">CFA Backtesting & Simulation：过拟合、样本外、验证边界</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const notes = document.getElementById('notes');
+    const key = 'h5-ai-trading-requirements-three-rounds-notes';
+    notes.value = localStorage.getItem(key) || '';
+    notes.addEventListener('input', () => localStorage.setItem(key, notes.value));
+  </script>
+</body>
+</html>

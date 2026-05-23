@@ -8,6 +8,7 @@ Artifacts:
 - `h5-ai-command-center-prototype.html` - first static prototype screen inspired by QuantDinger's left-nav quant workspace.
 - `h5-quantdinger-research-prd-workbench.html` - HTML research / product analysis / PRD / flowchart / prototype review workbench with an interactive feedback panel.
 - `h5-ai-trading-feasibility-report.html` - standalone feasibility report validating the H5 / QuantDinger / TradingAgents / market-data / API / risk-control assumptions and MVP boundaries.
+- `h5-ai-trading-requirements-three-rounds.html` - three-round requirements refinement for research, technical judgment, quant workflow, notifications, controlled self-trading, risk/treasury, security, and self-improvement.
 
 Working branch:
 
