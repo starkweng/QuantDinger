@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>H5 x QuantDinger Product Research PRD Workbench v0.2</title>
+  <title>H5 x QuantDinger Product Research PRD Workbench v0.3</title>
   <style>
     :root {
       --bg: #f4f6f8;
@@ -394,6 +394,64 @@
     .requirement strong { font-family: var(--mono); }
     .requirement p { margin: 4px 0 0; color: var(--muted); }
 
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .evidence-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .evidence-card h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .evidence-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .evidence-card ul { margin: 9px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .evidence-card li { margin: 4px 0; }
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .source-list a {
+      display: block;
+      min-height: 44px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: #27415f;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .source-list a:hover { border-color: var(--blue); color: var(--blue); }
+    .stage-ladder {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(118px, 1fr));
+      gap: 9px;
+      margin-top: 12px;
+    }
+    .stage {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 11px;
+      min-height: 112px;
+    }
+    .stage span { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .stage b { display: block; margin-top: 5px; font-size: 13px; }
+    .stage p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.48; }
+
     .proto-flow {
       display: grid;
       grid-template-columns: repeat(5, minmax(120px, 1fr));
@@ -610,7 +668,8 @@
       .flow-node::after { display: none; }
       .wireframe { grid-template-columns: 140px minmax(0, 1fr); }
       .wf-side { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .proto-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .proto-flow, .stage-ladder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .evidence-grid, .source-list { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 820px) {
@@ -624,7 +683,7 @@
       .wireframe { grid-template-columns: 1fr; }
       .wf-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .wf-main { border-right: 0; border-bottom: 1px solid var(--line); }
-      .wf-kpis, .wf-cards, .wf-side, .proto-flow { grid-template-columns: 1fr; }
+      .wf-kpis, .wf-cards, .wf-side, .proto-flow, .stage-ladder { grid-template-columns: 1fr; }
       .flow { grid-template-columns: 1fr; }
     }
   </style>
@@ -636,7 +695,7 @@
         <div class="brand-mark">H5</div>
         <div>
           <strong>Product Workbench</strong>
-          <span>QuantDinger adaptation v0.2</span>
+          <span>QuantDinger adaptation v0.3</span>
         </div>
       </div>
       <nav class="nav" id="nav">
@@ -645,6 +704,7 @@
         <a href="#research"><i></i><span>QuantDinger 调研</span></a>
         <a href="#h5"><i></i><span>H5 理解</span></a>
         <a href="#architecture"><i></i><span>产品架构</span></a>
+        <a href="#feasibility"><i></i><span>可行性验证</span></a>
         <a href="#prd"><i></i><span>PRD</span></a>
         <a href="#prototype"><i></i><span>原型图</span></a>
         <a href="#review"><i></i><span>评审口径</span></a>
@@ -661,7 +721,7 @@
       <header class="topbar">
         <div>
           <h1>H5 x QuantDinger 产品调研、产品分析、PRD 与原型工作台</h1>
-          <p>这版按产品经理评审稿重做：目标、用户、逻辑、流程、需求、验收和原型必须闭环。</p>
+          <p>这版加入网络资料与多 agent 可行性验证：先证明能落地，再进入 Figma 和开发。</p>
         </div>
         <div class="top-actions">
           <button data-jump="#prototype">看原型</button>
@@ -684,7 +744,7 @@
           </div>
           <div class="meta-grid">
             <div class="meta-item"><span>Owner</span><b>Stark / Codex</b></div>
-            <div class="meta-item"><span>Status</span><b>Review Draft v0.2</b></div>
+            <div class="meta-item"><span>Status</span><b>Feasibility Draft v0.3</b></div>
             <div class="meta-item"><span>Scope</span><b>Research + PRD + Prototype</b></div>
             <div class="meta-item"><span>Decision</span><b>HTML first, Figma later</b></div>
             <div class="meta-item"><span>Borrow From</span><b>QuantDinger framework</b></div>
@@ -947,10 +1007,135 @@
         </div>
       </section>
 
+      <section class="section" id="feasibility">
+        <div class="section-head">
+          <div>
+            <h2>5. 可行性验证：能做什么、先做什么、哪些不能直接实盘</h2>
+            <p>这一节来自网络资料、官方文档和多 agent 交叉验证；目的是把产品边界讲实。</p>
+          </div>
+          <span class="badge red">feasibility gate</span>
+        </div>
+        <div class="section-body">
+          <div class="evidence-grid">
+            <div class="evidence-card">
+              <h3>TradingView / Pine 回测 <span class="badge green">可做 P1</span></h3>
+              <p>TradingView 策略脚本可以在历史和实时数据上模拟订单、查看 Strategy Tester，但它本质是 broker emulator，不等于真实成交。</p>
+              <ul>
+                <li>适合：验证 H5 条件、Keltner/ATR、止损止盈、时间过滤、基础盈亏比。</li>
+                <li>不适合：证明真钱盈利、证明真实滑点、证明挂单队列和冲击成本。</li>
+                <li>产品决策：Pine 是第一道快速筛选，不是上线凭证。</li>
+              </ul>
+            </div>
+            <div class="evidence-card">
+              <h3>Binance 行情 / 执行 <span class="badge green">P0 数据，P2 实盘</span></h3>
+              <p>Binance Spot/Futures 官方 API 支持深度、K线、成交、ticker、交易端点和签名请求，足够支撑 crypto 数据层和后续执行层。</p>
+              <ul>
+                <li>适合：BTC/ETH/主流币 K线、深度、成交额、波动、订单簿状态。</li>
+                <li>执行限制：API key 权限、签名、recvWindow、rate limit、订单状态都必须进入风控和审计。</li>
+                <li>产品决策：MVP 只接 public data + paper；实盘必须到 P2。</li>
+              </ul>
+            </div>
+            <div class="evidence-card">
+              <h3>TradFi / 股票 / 贵金属 / 原油 <span class="badge amber">分层接入</span></h3>
+              <p>Alpaca 和 IBKR 都能支撑 paper trading 或 API 接入，但真实市场数据权限、地区限制、订单撮合差异和账户条件都不是小问题。</p>
+              <ul>
+                <li>Alpaca 适合先做美股/crypto paper，官方明确 paper 和 live 可能不同。</li>
+                <li>IBKR 覆盖广，但 TWS/IB Gateway、权限、订阅、异步订单状态复杂。</li>
+                <li>产品决策：TradFi 先做 Research + Paper Adapter，不直接承诺全品类自动交易。</li>
+              </ul>
+            </div>
+            <div class="evidence-card">
+              <h3>TradingAgents 多 agent <span class="badge green">可深学</span></h3>
+              <p>TradingAgents 的公开框架把基本面、情绪、新闻、技术、Bull/Bear debate、Trader、Risk、Portfolio Manager 串起来，适合改造成 H5 research pipeline。</p>
+              <ul>
+                <li>适合：多工种 agent 分析、反方辩论、风险团队、最终组合经理审批。</li>
+                <li>不适合：直接把 LLM 输出当交易命令。</li>
+                <li>产品决策：agent 只能产出 ResearchBrief / RiskOpinion / TradeProposal，不能越权下单。</li>
+              </ul>
+            </div>
+            <div class="evidence-card">
+              <h3>Keltner / ATR / 中轴 <span class="badge green">可量化</span></h3>
+              <p>Keltner 常见现代版本是 EMA 中线加 ATR 通道；它应该用于波动边界、趋势状态、偏离距离和止损参考，不应被产品写成单一买卖神谕。</p>
+              <ul>
+                <li>H5 用法：中轴周期随品种波动和交易时长变化，日内优先 5m/15m。</li>
+                <li>字段化：centerline_tf、kc_length、atr_length、atr_mult、distance_to_mid、channel_position。</li>
+                <li>产品决策：Keltner 是 RiskDistance / RegimeFeature，不是 auto-buy trigger。</li>
+              </ul>
+            </div>
+            <div class="evidence-card">
+              <h3>AI 安全 / Agent 权限 <span class="badge red">必须 P0</span></h3>
+              <p>OWASP LLM Top 10 明确提示 Prompt Injection、Insecure Output Handling、Excessive Agency 等风险。交易系统一旦接 API，这些不是理论风险。</p>
+              <ul>
+                <li>必须做：agent scope、最小权限、工具白名单、敏感操作二次确认、审计日志。</li>
+                <li>必须禁：research agent 直接调用交易 API、网页内容直接覆盖系统规则、无签名无审批的自动下单。</li>
+                <li>产品决策：Risk Kernel 和 Permission Kernel 都是 P0，不是上线后补。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">验证路线：从“能跑”到“能用真钱”必须过 5 道门</h3>
+          <div class="stage-ladder">
+            <div class="stage"><span>GATE 01</span><b>Research Only</b><p>只抓数据和生成研究 brief，不产生订单意图。</p></div>
+            <div class="stage"><span>GATE 02</span><b>Pine / Python 回测</b><p>同一 StrategySpec 在 Pine 和 Python 中验证，不看单次神迹，看样本外稳定性。</p></div>
+            <div class="stage"><span>GATE 03</span><b>Paper Trading</b><p>使用 Binance testnet / Alpaca paper / IBKR paper 验证订单生命周期和异常处理。</p></div>
+            <div class="stage"><span>GATE 04</span><b>Shadow Mode</b><p>跟随真实市场生成订单建议但不成交，对比实际成交可行性和滑点。</p></div>
+            <div class="stage"><span>GATE 05</span><b>Limited Live</b><p>极小资金、严格 kill switch、人工确认、日志完备后才允许 AUTO_API。</p></div>
+          </div>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">多 agent 交叉验证后的硬结论</h3>
+          <div class="three-col">
+            <div class="panel">
+              <h3>产品架构结论</h3>
+              <p>深抄 QuantDinger 的生命周期，而不是照搬 UI：Idea -> Indicator -> Strategy -> Backtest -> Paper/Shadow -> Execute -> Monitor。H5 每个策略必须有状态：draft、backtested、paper_running、shadow_passed、semi_auto_enabled、live_locked。</p>
+            </div>
+            <div class="panel">
+              <h3>策略回测结论</h3>
+              <p>Pine 用于验证规则骨架和图表可视化；Python 才用于严肃回测、组合资金管理、订单簿、手续费滑点、walk-forward 和样本外测试。漂亮 Pine 收益不能作为实盘依据。</p>
+            </div>
+            <div class="panel">
+              <h3>风控安全结论</h3>
+              <p>Risk Kernel 必须是确定性规则引擎。LLM 只能输出 proposal，不能输出 command；所有交易动作必须经过 schema 校验、权限校验、风控重算和审计。</p>
+            </div>
+          </div>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">数据与执行通道分级</h3>
+          <table>
+            <thead>
+              <tr><th>通道</th><th>P0 做法</th><th>P1 / P2 做法</th><th>关键风险</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Binance Spot / Futures</td><td>接行情、K线、成交、深度；默认 SIGNAL_ONLY / paper</td><td>P1 小额 SEMI_AUTO；P2 才考虑 AUTO_API</td><td>rate limit、unknown execution、partial fill、强平、资金费率、API 权限。</td></tr>
+              <tr><td>Binance TradFi Perps</td><td>只做 watchlist、信号、风险展示</td><td>P1 可做受控执行，但必须标注衍生品属性</td><td>不是底层股票/ETF/商品所有权，10x 杠杆放大盈亏，闭市定价和 gap 风险。</td></tr>
+              <tr><td>Binance Alpha / Ondo tokenized securities</td><td>只做 read-only data / research</td><td>P2 之后再评估执行，不进入 MVP 自动交易</td><td>地区限制、接口成熟度、合规边界、不是标准 Spot API 股票交易。</td></tr>
+              <tr><td>Alpaca</td><td>外部 TradFi paper / research 候选</td><td>P1 read-only + paper；P2 live adapter</td><td>paper 与 live 差异、IEX 数据限制、真实滑点和队列位置。</td></tr>
+              <tr><td>IBKR</td><td>先列为专业 TradFi 适配目标</td><td>P1 read-only / paper；P2 多资产 live</td><td>TWS/IB Gateway 复杂、市场数据订阅、异步订单状态、账户要求。</td></tr>
+              <tr><td>MT5</td><td>FX/CFD/贵金属/原油数据或信号适配</td><td>P2 broker-specific execution</td><td>不同 broker 价格源和交易服务器差异大，不是统一市场。</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">资料来源与产品判断依据</h3>
+          <div class="source-list">
+            <a href="https://www.quantdinger.com/docs.html" target="_blank" rel="noreferrer">QuantDinger Docs：AI 分析、Python 策略、回测、live execution、自托管架构</a>
+            <a href="https://github.com/brokermr810/QuantDinger" target="_blank" rel="noreferrer">QuantDinger GitHub：产品框架、Docker、本地量化平台代码参考</a>
+            <a href="https://www.tradingview.com/pine-script-docs/faq/strategies/" target="_blank" rel="noreferrer">TradingView Strategies：策略脚本、broker emulator、回测/前向测试边界</a>
+            <a href="https://www.tradingview.com/support/solutions/43000502266-keltner-channels-kc/" target="_blank" rel="noreferrer">TradingView Keltner：Keltner Channel 用法、趋势与震荡解释边界</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints" target="_blank" rel="noreferrer">Binance Spot Market Data：depth、trades、klines、ticker</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/request-security" target="_blank" rel="noreferrer">Binance Request Security：API key 权限、SIGNED 请求、recvWindow</a>
+            <a href="https://www.binance.com/en/academy/articles/tradfi-assets-you-can-trade-on-binance-futures" target="_blank" rel="noreferrer">Binance TradFi Futures：股票、ETF、贵金属、商品永续合约与风险边界</a>
+            <a href="https://docs.alpaca.markets/us/v1.4.2/docs/paper-trading" target="_blank" rel="noreferrer">Alpaca Paper Trading：paper 与 live 差异、模拟成交限制</a>
+            <a href="https://www.interactivebrokers.com/campus/ibkr-api-page/twsapi-doc/" target="_blank" rel="noreferrer">IBKR TWS API：TWS/IB Gateway、paper account、订单与数据限制</a>
+            <a href="https://github.com/TauricResearch/TradingAgents" target="_blank" rel="noreferrer">TradingAgents：多 agent 金融研究、debate、risk team、portfolio manager</a>
+            <a href="https://chartschool.stockcharts.com/table-of-contents/technical-indicators-and-overlays/technical-overlays/keltner-channels" target="_blank" rel="noreferrer">StockCharts Keltner Channels：EMA/ATR 通道、趋势与波动用法</a>
+            <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/backtesting-and-simulation" target="_blank" rel="noreferrer">CFA Backtesting & Simulation：样本外、走前验证、过拟合风险</a>
+            <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noreferrer">OWASP LLM Top 10：Prompt Injection、Excessive Agency、Overreliance</a>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="prd">
         <div class="section-head">
           <div>
-            <h2>5. PRD：MVP 开发范围和验收标准</h2>
+            <h2>6. PRD：MVP 开发范围和验收标准</h2>
             <p>这一段用于指挥开发，不是愿景描述。</p>
           </div>
           <span class="badge amber">build spec</span>
@@ -981,6 +1166,49 @@
             </tbody>
           </table>
 
+          <h3 style="margin:18px 0 8px;font-size:14px;">Risk Kernel P0 硬闸门</h3>
+          <table>
+            <thead>
+              <tr><th>风控项</th><th>必须字段 / 规则</th><th>失败动作</th><th>产品含义</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>单笔风险</td><td>必须有 entry、stop、qty、fee、slippage_buffer、max_loss_amount</td><td>NO_TRADE</td><td>无止损不得开仓，先知道最多亏多少。</td></tr>
+              <tr><td>日亏损</td><td>已实现亏损 + 浮亏达到阈值，进入冷却或冻结</td><td>FROZEN</td><td>当天状态不好就停止，不能靠加仓追回。</td></tr>
+              <tr><td>连续亏损</td><td>连亏 N 笔降级，连亏更高阈值冻结</td><td>CONSERVATIVE / FROZEN</td><td>系统要识别策略或市场状态失效。</td></tr>
+              <tr><td>仓位与杠杆</td><td>单品种、单策略、相关品种、总账户都设上限</td><td>REJECT / REDUCE_ONLY</td><td>不能让 BTC/ETH/SOL 同向风险伪装成分散。</td></tr>
+              <tr><td>数据新鲜度</td><td>行情、订单簿、账户余额、持仓快照不能过期</td><td>SIGNAL_ONLY</td><td>数据不新鲜时，不允许挂单和 API 执行。</td></tr>
+              <tr><td>执行模式</td><td>SIGNAL_ONLY / SEMI_AUTO / AUTO_API 必须由前端和服务器双重授权</td><td>MODE_DOWNGRADE</td><td>策略不能自己决定自动交易。</td></tr>
+            </tbody>
+          </table>
+
+          <div class="two-col" style="margin-top:12px;">
+            <div class="panel">
+              <h3>核心公式</h3>
+              <p>单笔最大亏损 = abs(entry - stop) * qty * contract_value + fee + slippage_buffer。</p>
+              <p style="margin-top:8px;">最终仓位取最小值：风险预算、杠杆限制、流动性限制、仓位上限、相关性上限、交易所最小/最大下单规则。</p>
+            </div>
+            <div class="panel">
+              <h3>两套资管模板</h3>
+              <p><b>Account State Template：</b>账户级状态机，控制 normal、conservative、reduce_only、frozen。</p>
+              <p style="margin-top:8px;"><b>Strategy Budget Template：</b>策略级预算，控制单元升级、利润锁定、阶段降级、试错次数。</p>
+            </div>
+          </div>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">H5 StrategySpec 最小字段</h3>
+          <table>
+            <thead>
+              <tr><th>字段组</th><th>字段</th><th>用途</th><th>验收标准</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Instrument</td><td>symbol、market_type、tick_size、lot_size、fee_rate、session_status</td><td>适配 crypto / stock / FX / commodity 的交易规则</td><td>每个标的进入策略前必须生成 InstrumentProfile。</td></tr>
+              <tr><td>Timeframe</td><td>axis_tf、entry_tf、confirm_tf、holding_plan</td><td>中轴根据品种波动和交易时长确定</td><td>日内策略必须明确 5m/15m 等中轴依据。</td></tr>
+              <tr><td>Keltner</td><td>kc_len、atr_len、atr_mult、kc_position、kc_width、basis_slope</td><td>描述波动通道、距离、偏离和趋势状态</td><td>只能作为 evidence / risk distance，不得直接触发自动下单。</td></tr>
+              <tr><td>MA Cost</td><td>ma20、ma60、ma120、deduct_price、cluster_width、bias_atr</td><td>把均线成本、抵扣价、密集、乖离转为量化字段</td><td>必须能解释趋势阶段和必由之路。</td></tr>
+              <tr><td>Scenario</td><td>A/B/C/D path、trigger、allowed_action、invalid_condition</td><td>未来 15/30/60 分钟路径推演</td><td>每条路径必须有动作和不动作条件。</td></tr>
+              <tr><td>Risk</td><td>risk_pct、max_daily_loss、min_reward_r、kill_switch、mode_allowed</td><td>控制亏损和执行权限</td><td>没有 RiskDecision 的 signal 不可进入执行台。</td></tr>
+            </tbody>
+          </table>
+
           <h3 style="margin:18px 0 8px;font-size:14px;">P0 / P1 / P2 范围</h3>
           <div class="requirement">
             <strong>P0-01</strong>
@@ -1008,6 +1236,11 @@
             <span class="badge green">MVP</span>
           </div>
           <div class="requirement">
+            <strong>P0-06</strong>
+            <div><b>Market / Broker Adapter Model</b><p>先抽象 MarketDataProvider、BrokerAdapter、InstrumentProfile、OrderIntent；P0 只落 Binance crypto 数据和统一订单意图，不承诺全球全市场自动交易。</p></div>
+            <span class="badge green">MVP</span>
+          </div>
+          <div class="requirement">
             <strong>P1-01</strong>
             <div><b>TradingView Pine Export</b><p>把 H5 StrategySpec 转成 Pine v5 策略，用于 TradingView 回测和可视化验证。</p></div>
             <span class="badge blue">Next</span>
@@ -1018,9 +1251,47 @@
             <span class="badge blue">Next</span>
           </div>
           <div class="requirement">
+            <strong>P1-03</strong>
+            <div><b>TradFi Research Adapter</b><p>Alpaca paper、IBKR read-only、Binance TradFi perpetuals watchlist、tokenized securities read-only research；执行一律不默认开启。</p></div>
+            <span class="badge blue">Next</span>
+          </div>
+          <div class="requirement">
             <strong>P2-01</strong>
             <div><b>Live API Execution</b><p>接 Binance/IBKR/MT5 等实盘前，必须先完成 paper mode、shadow mode、权限 token 和异常断路。</p></div>
             <span class="badge amber">Later</span>
+          </div>
+          <div class="requirement">
+            <strong>P2-02</strong>
+            <div><b>Advanced Venue Execution</b><p>IBKR live 多资产、MT5 broker-specific、Binance Alpha/Ondo tokenized securities、Aster/Binance Wallet 原油等全部作为独立 adapter 验收。</p></div>
+            <span class="badge amber">Later</span>
+          </div>
+
+          <h3 style="margin:18px 0 8px;font-size:14px;">产品反模式：这些做法禁止进入 MVP</h3>
+          <div class="three-col">
+            <div class="panel">
+              <h3>LLM 直接下单</h3>
+              <p>Agent 输出只能是 Decision Packet，不能直接生成交易命令。交易命令必须经过 deterministic Risk Kernel。</p>
+            </div>
+            <div class="panel">
+              <h3>回测即实盘</h3>
+              <p>任何漂亮回测都只能证明规则值得继续测。没有样本外、paper、shadow 和执行日志，不允许开启真钱 API。</p>
+            </div>
+            <div class="panel">
+              <h3>指标神化</h3>
+              <p>Keltner、Wyckoff、VSA、均线、2B 都只是证据对象。单个指标不得成为自动下单理由。</p>
+            </div>
+            <div class="panel">
+              <h3>权限过大</h3>
+              <p>Research Agent 默认 read-only；Trading Token 默认 paper-only；Live 权限必须按账户、策略、标的、额度、过期时间限制。</p>
+            </div>
+            <div class="panel">
+              <h3>一坨策略</h3>
+              <p>信号、风控、资金管理、执行、复盘必须分层。否则亏损后无法知道是策略错、仓位错还是执行错。</p>
+            </div>
+            <div class="panel">
+              <h3>忽略不下单</h3>
+              <p>等待、拒绝、降级、冻结都必须是一等结果，且要进入日志和复盘。会不做才是不败的开始。</p>
+            </div>
           </div>
         </div>
       </section>
@@ -1028,7 +1299,7 @@
       <section class="section" id="prototype">
         <div class="section-head">
           <div>
-            <h2>6. 产品原型图：先流程，后界面</h2>
+            <h2>7. 产品原型图：先流程，后界面</h2>
             <p>这一页是给 Figma 前确认的产品原型，不追求视觉高保真，追求逻辑完整。</p>
           </div>
           <span class="badge blue">prototype</span>
@@ -1127,7 +1398,7 @@
       <section class="section" id="review">
         <div class="section-head">
           <div>
-            <h2>7. 评审口径：你确认什么，我再进入什么</h2>
+            <h2>8. 评审口径：你确认什么，我再进入什么</h2>
             <p>避免过早进入 Figma，把产品逻辑先定准。</p>
           </div>
           <span class="badge green">review gate</span>
@@ -1171,6 +1442,7 @@
           <option>QuantDinger 调研</option>
           <option>H5 理解</option>
           <option>产品架构</option>
+          <option>可行性验证</option>
           <option>PRD</option>
           <option>产品原型图</option>
           <option>其它</option>
@@ -1251,7 +1523,7 @@
         "硬性要求：",
         "1. 继续先用 HTML 做调研、产品分析、PRD 和原型，不要直接进入 Figma。",
         "2. 产品原型图页必须先有流程图，再有界面原型。",
-        "3. 内容要像产品经理写的，讲清楚问题、用户、流程、模块、需求和验收标准。",
+        "3. 内容要像产品经理写的，讲清楚问题、用户、流程、模块、需求、可行性验证和验收标准。",
         "4. 不要把 H5 简化成原则口号，要保留 Excel 交易系统、指标、中轴、Keltner、风控和执行模式逻辑。",
         "5. 继续保留右侧可交互反馈面板。"
       ].join("\\n");
