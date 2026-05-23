@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H5 AI Trading Command Center Feasibility Report</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --paper: #ffffff;
+      --ink: #13202d;
+      --muted: #637184;
+      --soft: #8b98a8;
+      --line: #dce4ed;
+      --line-strong: #c6d2df;
+      --nav: #101a27;
+      --blue: #1769e0;
+      --blue-soft: #e8f1ff;
+      --green: #0b8f62;
+      --green-soft: #e7f6ef;
+      --amber: #a86900;
+      --amber-soft: #fff4dc;
+      --red: #c63446;
+      --red-soft: #ffecee;
+      --purple: #704ccf;
+      --purple-soft: #f1edff;
+      --shadow: 0 18px 44px rgba(19, 32, 45, .08);
+      --radius: 8px;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.62;
+      letter-spacing: 0;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input, select, textarea { font: inherit; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 246px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: var(--nav);
+      color: #dce6f2;
+      border-right: 1px solid rgba(255,255,255,.08);
+      padding: 18px 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      margin-bottom: 14px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--nav);
+      font-weight: 850;
+      font-size: 13px;
+    }
+
+    .brand strong { display: block; font-size: 14px; }
+    .brand span { display: block; color: #9cacbf; font-size: 11px; margin-top: 2px; }
+
+    .nav { display: grid; gap: 5px; }
+    .nav a {
+      display: flex;
+      align-items: center;
+      min-height: 39px;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      color: #b8c6d6;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .nav a:hover, .nav a.active { background: #1e3148; color: #fff; }
+    .nav i {
+      width: 14px;
+      height: 14px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      opacity: .7;
+    }
+
+    .side-meta {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      color: #94a5ba;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    main {
+      min-width: 0;
+      padding: 24px 28px 52px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: -24px -28px 18px;
+      padding: 15px 28px;
+      background: rgba(245, 247, 250, .93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar h1 { margin: 0; font-size: 21px; line-height: 1.2; }
+    .topbar p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .top-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .top-actions a {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      padding: 8px 12px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .top-actions a.primary { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 700; }
+
+    .section {
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .section-head {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f9fbfd;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .section-head h2 { margin: 0; font-size: 16px; line-height: 1.32; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .section-body { padding: 18px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, .6fr);
+      gap: 14px;
+    }
+    .hero-card {
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #fff, #f8fbff);
+    }
+    .hero-card h2 { margin: 0; font-size: 30px; line-height: 1.18; letter-spacing: 0; }
+    .hero-card p { margin: 12px 0 0; color: var(--muted); max-width: 86ch; }
+
+    .verdict {
+      display: grid;
+      gap: 10px;
+    }
+    .score {
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .score span { display: block; color: var(--muted); font-size: 11px; font-family: var(--mono); text-transform: uppercase; }
+    .score b { display: block; margin-top: 4px; font-size: 20px; line-height: 1.2; }
+    .score small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f6f8fb;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .badge.green { background: var(--green-soft); border-color: #bde8d6; color: var(--green); }
+    .badge.amber { background: var(--amber-soft); border-color: #f3d090; color: var(--amber); }
+    .badge.red { background: var(--red-soft); border-color: #f5bbc3; color: var(--red); }
+    .badge.blue { background: var(--blue-soft); border-color: #b9d4fb; color: var(--blue); }
+    .badge.purple { background: var(--purple-soft); border-color: #d8cbff; color: var(--purple); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 14px;
+      min-width: 0;
+    }
+    .panel.shaded { background: #f9fbfd; }
+    .panel h3 { margin: 0 0 7px; font-size: 14px; line-height: 1.35; }
+    .panel p { margin: 0; color: var(--muted); font-size: 13px; }
+    .panel ul, .panel ol { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .panel li { margin: 4px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--paper);
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      background: #f9fbfd;
+      font-size: 11px;
+      font-family: var(--mono);
+      text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: 0; }
+    td:first-child { font-weight: 750; color: var(--ink); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(135px, 1fr));
+      gap: 9px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+    }
+    .flow-node {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 136px;
+      background: var(--paper);
+    }
+    .flow-node span { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .flow-node b { display: block; margin-top: 6px; font-size: 13px; line-height: 1.35; }
+    .flow-node p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.48; }
+
+    .callout {
+      border: 1px solid #b9d4fb;
+      border-left: 4px solid var(--blue);
+      border-radius: var(--radius);
+      background: var(--blue-soft);
+      padding: 13px;
+      color: #244765;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .callout.red { border-color: #f5bbc3; border-left-color: var(--red); background: var(--red-soft); color: #6c2630; }
+    .callout.amber { border-color: #f3d090; border-left-color: var(--amber); background: var(--amber-soft); color: #66460d; }
+
+    .code {
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: #0f1824;
+      color: #dce6f2;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre;
+    }
+
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .source-list a {
+      min-height: 46px;
+      display: block;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f9fbfd;
+      color: #27415f;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1180px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .hero-grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 18px 14px 36px; }
+      .topbar { position: static; margin: -18px -14px 14px; padding: 14px; display: grid; }
+      .nav, .hero-grid, .grid-2, .grid-3, .grid-4, .source-list, .flow { grid-template-columns: 1fr; }
+      .hero-card h2 { font-size: 24px; }
+      table { font-size: 12px; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">H5</div>
+        <div>
+          <strong>可行性报告</strong>
+          <span>Feasibility Report v0.1</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="active" href="#summary"><i></i><span>总裁结论</span></a>
+        <a href="#assumptions"><i></i><span>假设验证</span></a>
+        <a href="#architecture"><i></i><span>产品架构</span></a>
+        <a href="#strategy"><i></i><span>策略可行性</span></a>
+        <a href="#data"><i></i><span>数据/API</span></a>
+        <a href="#risk"><i></i><span>风控资管</span></a>
+        <a href="#mvp"><i></i><span>MVP 范围</span></a>
+        <a href="#decision"><i></i><span>开发决策</span></a>
+        <a href="#sources"><i></i><span>来源</span></a>
+      </nav>
+      <div class="side-meta">
+        Date: 2026-05-24<br>
+        Scope: H5 x QuantDinger<br>
+        Method: official docs + feasibility reasoning<br>
+        Output: HTML decision report
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>H5 AI Trading Command Center 深度可行性报告</h1>
+          <p>验证对象：H5 Excel 交易系统、QuantDinger 框架、多 agent research、Binance/TradFi 数据与执行、风控资管。</p>
+        </div>
+        <div class="top-actions">
+          <a href="#decision">看结论</a>
+          <a class="primary" href="#mvp">看 MVP</a>
+        </div>
+      </header>
+
+      <section class="section" id="summary">
+        <div class="section-body hero-grid">
+          <div class="hero-card">
+            <h2>结论：可做，而且值得做；但第一版必须是“可控交易指挥系统”，不是“全自动赚钱机器”。</h2>
+            <p>之前的设想大方向成立：QuantDinger 可以作为产品骨架，TradingAgents 可以作为多 agent 协作范式，H5 可以结构化为 StrategySpec + Scenario Planner + Risk Kernel + Execution Desk。真正要收紧的是边界：P0 做跨市场研究、H5 策略证据、风控、paper/shadow；真钱 API 和全市场自动交易必须后置。</p>
+            <div class="callout">
+              本报告的核心判断：H5 的产品优势不是更快下单，而是更稳定地做到“看懂、推演、等待、认输、风控、复盘”。系统必须先能解释为什么不做，才有资格帮助你做。
+            </div>
+          </div>
+          <div class="verdict">
+            <div class="score"><span>Feasibility</span><b>7.8 / 10</b><small>限定 MVP 边界后可行。</small></div>
+            <div class="score"><span>First Release</span><b>Signal + Paper</b><small>不建议第一版 live auto。</small></div>
+            <div class="score"><span>Hard Gate</span><b>Risk Kernel</b><small>确定性规则，不能让 LLM 覆盖。</small></div>
+            <div class="score"><span>Use Case</span><b>Stark 私人工具</b><small>先自用验证，再考虑产品化开放。</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="assumptions">
+        <div class="section-head">
+          <div>
+            <h2>1. 之前设想逐条验证</h2>
+            <p>这部分只回答一个问题：原来的想法能不能变成可运行产品。</p>
+          </div>
+          <span class="badge blue">Validated assumptions</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>设想</th><th>判断</th><th>证据 / 理由</th><th>产品决策</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>QuantDinger 作为骨架</td><td><span class="badge green">成立</span></td><td>它已有 AI 分析、Python 策略、回测、live execution、自托管部署、Agent Gateway 等完整闭环。</td><td>深抄生命周期和模块关系，不照搬品牌与受限前端资产。</td></tr>
+              <tr><td>TradingAgents 多 agent 协作</td><td><span class="badge green">成立但降权</span></td><td>多 agent research、Bull/Bear debate、Risk/Portfolio Manager 有价值，但其自身定位仍是研究框架。</td><td>Agent 产出 Decision Packet，不直接下单。</td></tr>
+              <tr><td>H5 可以策略化</td><td><span class="badge green">成立</span></td><td>中轴、Keltner/ATR、均线成本、2B、量价结构、评分、资金管理都能字段化。</td><td>做 StrategySpec，不做单一指标脚本。</td></tr>
+              <tr><td>Keltner 能给信号</td><td><span class="badge amber">需改写</span></td><td>Keltner 是 EMA/ATR 波动通道，可辅助趋势/偏离/风险距离；单独触轨不应自动交易。</td><td>定位为 volatility distance 和 regime feature。</td></tr>
+              <tr><td>TradingView 可回测</td><td><span class="badge amber">部分成立</span></td><td>Pine strategy 使用 broker emulator，适合快速验证规则，但不能证明真实成交、滑点、队列、API 延迟。</td><td>Pine 是 P1 快速验证；严肃验证必须 Python + paper + shadow。</td></tr>
+              <tr><td>Binance 支撑 crypto 数据/执行</td><td><span class="badge green">成立</span></td><td>Spot/Futures API 有 depth、trades、klines、ticker、签名交易端点和权限模型。</td><td>P0 接 public data；P1 才小额 semi-auto；P2 才 live auto。</td></tr>
+              <tr><td>Binance 融入股票/贵金属/原油</td><td><span class="badge amber">可分析，谨慎执行</span></td><td>Binance Futures 有 TradFi perpetuals，但它们是衍生品，不是底层股票/商品所有权；tokenized securities 有地区和接口边界。</td><td>P0/P1 做 watchlist + research + risk display，执行后置。</td></tr>
+              <tr><td>半自动/API 自动由前端下命令</td><td><span class="badge green">成立</span></td><td>执行模式可产品化为 SIGNAL_ONLY / SEMI_AUTO / AUTO_API。</td><td>前端授权 + 服务器策略状态 + Risk Kernel 三重门。</td></tr>
+              <tr><td>资管风控是核心</td><td><span class="badge green">强成立</span></td><td>任何策略都会失效，唯一可控的是单笔亏损、日损、回撤、仓位、权限和停止机制。</td><td>Risk Kernel 是 P0，不是后置增强。</td></tr>
+              <tr><td>全市场全自动第一版上线</td><td><span class="badge red">不成立</span></td><td>数据权限、API 差异、paper/live 差异、合规、风控、执行状态复杂度太高。</td><td>砍掉。第一版做可控 MVP。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="section-head">
+          <div>
+            <h2>2. 推荐产品架构</h2>
+            <p>这不是愿景图，而是后续开发的主链路。</p>
+          </div>
+          <span class="badge green">Buildable architecture</span>
+        </div>
+        <div class="section-body">
+          <div class="flow">
+            <div class="flow-node"><span>01</span><b>Market Data Layer</b><p>Binance Spot/Futures 优先；TradFi 先 read-only。</p></div>
+            <div class="flow-node"><span>02</span><b>Research Desk</b><p>技术、新闻、宏观、盘口、反方、风险 agent。</p></div>
+            <div class="flow-node"><span>03</span><b>H5 StrategySpec</b><p>Excel 逻辑、周期、中轴、Keltner、评分字段化。</p></div>
+            <div class="flow-node"><span>04</span><b>Scenario Planner</b><p>A/B/C/D 路径推演；准备动作，不预测。</p></div>
+            <div class="flow-node"><span>05</span><b>Risk Kernel</b><p>确定性硬闸门；计算最大亏损和执行权限。</p></div>
+            <div class="flow-node"><span>06</span><b>Execution Desk</b><p>SIGNAL_ONLY、SEMI_AUTO、AUTO_API 分级。</p></div>
+          </div>
+
+          <div class="grid-3" style="margin-top:14px;">
+            <div class="panel">
+              <h3>必须分层</h3>
+              <p>信号、风控、资金管理、执行、复盘要拆开。否则亏损后无法判断问题来自策略、仓位还是执行。</p>
+            </div>
+            <div class="panel">
+              <h3>必须有状态机</h3>
+              <p>策略状态从 draft 到 backtested、paper、shadow、semi_auto、live_locked。没有阶段证据，不允许升级。</p>
+            </div>
+            <div class="panel">
+              <h3>必须留审计</h3>
+              <p>每次信号、拒绝、降级、挂单草稿、撤单、止损都记录输入、版本、原因和责任主体。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="strategy">
+        <div class="section-head">
+          <div>
+            <h2>3. H5 策略可行性</h2>
+            <p>H5 可落地，但必须是证据系统，不是神秘指标系统。</p>
+          </div>
+          <span class="badge purple">StrategySpec</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-2">
+            <div class="panel">
+              <h3>可字段化的 H5 核心</h3>
+              <ul>
+                <li>中轴：`axis_tf`、`axis_basis`、`basis_slope`、`price_distance_to_axis`。</li>
+                <li>Keltner：`kc_len`、`atr_len`、`atr_mult`、`kc_position`、`kc_width_pct`。</li>
+                <li>均线成本：`ma20/60/120`、`deduct_price`、`cluster_width_pct`、`bias_atr`。</li>
+                <li>结构：`2B`、假突破、回踩、支撑阻力、区间位置。</li>
+                <li>量价：成交额突变、努力-结果背离、收盘位置、波动扩张/收缩。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>不能这样做</h3>
+              <ul>
+                <li>不能把 Keltner 上轨突破写成直接买入。</li>
+                <li>不能把 Wyckoff 相位识别当成高确定性标签。</li>
+                <li>不能为了回测收益暴力优化中轴周期。</li>
+                <li>不能让评分达标绕过风控。</li>
+                <li>不能把“AI 判断看多”变成订单。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout amber">
+            中轴必须随品种波动和交易时长变化。比如确认做日内，BTC/ETH 可能优先 5m/15m；股票/贵金属/原油需要结合交易时段、跳空风险和波动结构再定。中轴是分析尺度，不是固定宗教。
+          </div>
+
+          <div class="code">StrategySpec minimum:
+strategy_id, version, symbol, venue, market_type
+axis_tf, entry_tf, confirm_tf, holding_plan
+kc_len, atr_len, atr_mult, kc_position, kc_basis_slope
+ma_cost_fields, deduct_price_fields, structure_fields, turnover_fields
+scenario_plan: A/B/C/D with trigger, action, invalid_condition
+risk: risk_pct, max_daily_loss, min_reward_r, kill_switch, mode_allowed
+validation: pine_status, python_status, paper_status, shadow_status, live_status</div>
+        </div>
+      </section>
+
+      <section class="section" id="data">
+        <div class="section-head">
+          <div>
+            <h2>4. 数据与 API 可行性</h2>
+            <p>核心原则：分析可以跨市场，执行必须按 venue 分层。</p>
+          </div>
+          <span class="badge blue">Data / API</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>通道</th><th>可行性</th><th>第一版做法</th><th>风险</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Binance Spot / Futures</td><td><span class="badge green">高</span></td><td>行情、K线、成交、深度；paper/shadow；受控 order intent。</td><td>rate limit、签名、unknown execution、partial fill、杠杆强平。</td></tr>
+              <tr><td>Binance TradFi Perps</td><td><span class="badge amber">中</span></td><td>watchlist、research、risk display；标注衍生品属性。</td><td>不是股票/商品所有权；10x 杠杆、资金费率、闭市 gap。</td></tr>
+              <tr><td>Binance Alpha / Ondo</td><td><span class="badge amber">中低</span></td><td>只做 tokenized securities read-only research。</td><td>地区限制、接口成熟度、合规边界。</td></tr>
+              <tr><td>Alpaca</td><td><span class="badge amber">中</span></td><td>美股/crypto paper 与 data adapter 候选。</td><td>paper/live 差异、IEX 数据限制、真实滑点。</td></tr>
+              <tr><td>IBKR</td><td><span class="badge amber">中</span></td><td>后置为专业 TradFi read-only / paper adapter。</td><td>TWS/IB Gateway 复杂、市场数据订阅、异步状态。</td></tr>
+              <tr><td>MT5</td><td><span class="badge amber">中低</span></td><td>FX/CFD/贵金属/原油信号候选。</td><td>依赖 broker，价格源与交易条件不统一。</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout red">
+            不建议第一版宣传“一键交易全球金融市场”。正确表述是：第一版支持跨市场研究与 crypto 主通道验证；TradFi/商品/FX 先以分析和 paper 为主，逐步通过 adapter 接入。
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="risk">
+        <div class="section-head">
+          <div>
+            <h2>5. 风控与资管可行性</h2>
+            <p>这是系统成败的硬核，不是辅助模块。</p>
+          </div>
+          <span class="badge red">Risk Kernel</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-2">
+            <div class="panel">
+              <h3>Risk Kernel 必须是确定性规则</h3>
+              <p>LLM 可以给理由、证据、场景和建议，但不能修改风控参数，不能绕过单笔亏损、日亏损、连续亏损、仓位、杠杆、滑点、数据新鲜度和执行模式。</p>
+              <div class="code">max_loss = abs(entry - stop) * qty * contract_value + fee + slippage_buffer
+
+allow_order =
+  max_loss <= account_risk_budget
+  and daily_loss_remaining > max_loss
+  and position_after_order <= position_limit
+  and data_fresh == true
+  and execution_mode_allowed == true</div>
+            </div>
+            <div class="panel">
+              <h3>两套资金管理模板</h3>
+              <ul>
+                <li><b>Account State Template：</b>账户级状态机，normal / conservative / reduce_only / frozen。</li>
+                <li><b>Strategy Budget Template：</b>策略级预算，试错次数、利润锁定、降级和阶段升级。</li>
+                <li><b>ATR 仓位：</b>波动越大，仓位越小；ATR 只管波动，不判断方向。</li>
+                <li><b>最终仓位：</b>取风险预算、杠杆、流动性、相关性、交易所规则的最小值。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="font-size:14px;margin:18px 0 8px;">Agent 权限边界</h3>
+          <table>
+            <thead>
+              <tr><th>角色</th><th>允许</th><th>禁止</th><th>原因</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Research Agent</td><td>读取行情、新闻、盘口、链上；产出 Evidence</td><td>下单、改风控、读密钥</td><td>避免 prompt injection 变成资金风险。</td></tr>
+              <tr><td>Risk Officer</td><td>计算、否决、降级、冻结、解释原因</td><td>创建方向信号、下单</td><td>风险官不能成为交易员。</td></tr>
+              <tr><td>Execution Agent</td><td>生成 paper order 或授权后的 order draft</td><td>绕过 Risk Kernel、自行改数量/止损</td><td>执行只执行已批准意图。</td></tr>
+              <tr><td>Operator</td><td>前端确认、切换模式、Kill Switch</td><td>关闭审计、跳过 P0 风控</td><td>人也不能绕过系统纪律。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="mvp">
+        <div class="section-head">
+          <div>
+            <h2>6. 推荐 MVP 范围</h2>
+            <p>先做能自用、能验证、能复盘的系统。</p>
+          </div>
+          <span class="badge green">Go build</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-3">
+            <div class="panel">
+              <h3>P0：必须做</h3>
+              <ul>
+                <li>H5 StrategySpec Editor。</li>
+                <li>Binance Spot/Futures public data。</li>
+                <li>Research Mission + Decision Packet。</li>
+                <li>Scenario Planner A/B/C/D。</li>
+                <li>Risk Kernel v0。</li>
+                <li>Signal Card + Paper Order Intent。</li>
+                <li>Audit Log。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>P1：第二阶段</h3>
+              <ul>
+                <li>TradingView Pine Export。</li>
+                <li>Python Backtest Lab。</li>
+                <li>Shadow Mode。</li>
+                <li>Broker read-only adapter。</li>
+                <li>TradFi watchlist / research。</li>
+                <li>Notification / approval workflow。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>P2：后置</h3>
+              <ul>
+                <li>Small-size semi-auto live。</li>
+                <li>Binance AUTO_API 白名单。</li>
+                <li>IBKR / Alpaca / MT5 live adapter。</li>
+                <li>Tokenized securities execution。</li>
+                <li>Multi-account portfolio risk。</li>
+                <li>Public strategy marketplace。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout">
+            MVP 的正确目标不是“马上赚钱”，而是建立一套你能每天用的交易工作流：标的扫描 -> research -> H5 评分 -> 场景推演 -> 风控判定 -> 信号/paper -> 复盘。这个闭环跑通后，才谈真钱执行。
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="decision">
+        <div class="section-head">
+          <div>
+            <h2>7. 最终开发决策</h2>
+            <p>如果现在开动，应该这样开。</p>
+          </div>
+          <span class="badge green">Decision</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-2">
+            <div class="panel shaded">
+              <h3>Go</h3>
+              <p>可以进入原型和开发规划。第一版定位为 Stark 自用的 AI Trading Command Center：以 Binance crypto 数据为主通道，支持 H5 策略证据、场景推演、Risk Kernel、Signal/Paper、审计复盘。</p>
+            </div>
+            <div class="panel shaded">
+              <h3>No-Go</h3>
+              <p>不要做“全自动交易机器人”、不要承诺收益、不要第一版接大资金实盘、不要把 tokenized stocks / TradFi perps 当成普通股票交易、不要让 LLM 直接下单。</p>
+            </div>
+          </div>
+
+          <h3 style="font-size:14px;margin:18px 0 8px;">开发前检查清单</h3>
+          <table>
+            <thead>
+              <tr><th>检查项</th><th>通过标准</th><th>未通过动作</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>H5 Excel 规则结构化</td><td>StrategySpec 字段能覆盖中轴、指标、评分、资金管理、执行模式</td><td>继续拆 Excel，不写代码</td></tr>
+              <tr><td>Risk Kernel</td><td>单笔最大亏损、日损、连续亏损、仓位、Kill Switch 可运行</td><td>禁止任何 live adapter</td></tr>
+              <tr><td>Pine/Python 一致性</td><td>同一 StrategySpec 可以导出 Pine 并在 Python 复刻</td><td>只保留 research，不升级 paper</td></tr>
+              <tr><td>Paper / Shadow</td><td>至少跑 2-4 周，记录风控拒绝、滑点估计、错过成交</td><td>不允许 semi-auto</td></tr>
+              <tr><td>权限与审计</td><td>所有 agent/action 有 scope、input_hash、reason、operator</td><td>不允许 API key 接入</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="sources">
+        <div class="section-head">
+          <div>
+            <h2>8. 本轮验证来源</h2>
+            <p>优先使用官方文档、项目仓库和高可信资料。</p>
+          </div>
+          <span class="badge blue">Sources</span>
+        </div>
+        <div class="section-body">
+          <div class="source-list">
+            <a href="https://www.quantdinger.com/docs.html" target="_blank" rel="noreferrer">QuantDinger Docs：自托管 AI 量化、Python 策略、回测、live execution</a>
+            <a href="https://www.quantdinger.com/" target="_blank" rel="noreferrer">QuantDinger Product：Agent Gateway、paper-only defaults、kill switch</a>
+            <a href="https://github.com/TauricResearch/TradingAgents" target="_blank" rel="noreferrer">TradingAgents GitHub：多 agent、risk team、portfolio manager、research purpose</a>
+            <a href="https://arxiv.org/abs/2412.20138" target="_blank" rel="noreferrer">TradingAgents arXiv：Bull/Bear researcher、risk management team、trader synthesis</a>
+            <a href="https://www.tradingview.com/pine-script-docs/concepts/strategies/" target="_blank" rel="noreferrer">TradingView Strategies：broker emulator、slippage、回测边界</a>
+            <a href="https://www.tradingview.com/support/solutions/43000502266-keltner-channels-kc/" target="_blank" rel="noreferrer">TradingView Keltner：Keltner Channel 用法</a>
+            <a href="https://chartschool.stockcharts.com/table-of-contents/technical-indicators-and-overlays/technical-overlays/keltner-channels" target="_blank" rel="noreferrer">StockCharts Keltner：EMA + ATR 通道</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints" target="_blank" rel="noreferrer">Binance Spot API：depth、trades、klines、ticker</a>
+            <a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/request-security" target="_blank" rel="noreferrer">Binance Request Security：API key 权限、签名、recvWindow</a>
+            <a href="https://www.binance.com/en/academy/articles/tradfi-assets-you-can-trade-on-binance-futures" target="_blank" rel="noreferrer">Binance TradFi Futures：衍生品、USDT 结算、10x、24/7、非所有权</a>
+            <a href="https://docs.alpaca.markets/v1.4.2/docs/paper-trading" target="_blank" rel="noreferrer">Alpaca Paper Trading：paper/live 差异、市场冲击、滑点、队列限制</a>
+            <a href="https://www.interactivebrokers.com/campus/ibkr-api-page/twsapi-doc/" target="_blank" rel="noreferrer">IBKR TWS API：TWS/IB Gateway、paper trading、接口限制</a>
+            <a href="https://api.ibkr.com/en/trading/tws.php" target="_blank" rel="noreferrer">IBKR PaperTrader：模拟账户限制、fills from top of book</a>
+            <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noreferrer">OWASP LLM Top 10：Prompt Injection、Excessive Agency、Overreliance</a>
+            <a href="https://www.sec.gov/files/rules/final/2010/34-63241fr.pdf" target="_blank" rel="noreferrer">SEC Market Access Rule：pre-trade risk controls</a>
+            <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/backtesting-and-simulation" target="_blank" rel="noreferrer">CFA Backtesting & Simulation：过拟合、样本外、走前验证</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
