@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H5 x QuantDinger Research PRD Workbench</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --surface: #131820;
+      --surface-2: #1a202a;
+      --surface-3: #222a35;
+      --fg: #e8edf3;
+      --muted: #91a0b2;
+      --line: #2b3542;
+      --blue: #4da3ff;
+      --green: #29c986;
+      --red: #ff5d73;
+      --amber: #f5b84b;
+      --cyan: #4dd8e8;
+      --ink: #070a0d;
+      --radius: 8px;
+      --shadow: 0 18px 48px rgba(0,0,0,.32);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.52;
+      letter-spacing: 0;
+    }
+
+    button, textarea, input, select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--fg);
+      border-radius: 7px;
+      padding: 9px 12px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--ink);
+      font-weight: 760;
+    }
+
+    button.danger {
+      background: #35171d;
+      border-color: #65313b;
+      color: #ffb1bd;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr) 330px;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #080a0d;
+      border-right: 1px solid var(--line);
+      padding: 18px 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 16px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      color: var(--ink);
+      font-weight: 850;
+    }
+
+    .brand strong { display: block; font-size: 14px; }
+    .brand span { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 11px;
+      border-radius: 7px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .nav a.active,
+    .nav a:hover {
+      background: #102436;
+      color: var(--fg);
+    }
+
+    .nav i {
+      width: 14px;
+      height: 14px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      opacity: .85;
+    }
+
+    .left-meta {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    main {
+      min-width: 0;
+      padding: 22px 22px 42px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      margin: -22px -22px 18px;
+      padding: 16px 22px;
+      background: rgba(11, 13, 16, .9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .topbar p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .section {
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .section-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-body { padding: 16px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .hero-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      padding: 18px;
+      min-height: 236px;
+    }
+
+    .hero-card h2 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.18;
+    }
+
+    .hero-card p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .principle {
+      background: #10151c;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .principle b { display: block; margin-bottom: 4px; }
+    .principle span { color: var(--muted); }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 12px;
+      min-height: 94px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 9px;
+      font-size: 23px;
+    }
+
+    .metric small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(112px, 1fr));
+      gap: 9px;
+      align-items: stretch;
+    }
+
+    .flow-node {
+      position: relative;
+      min-height: 112px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 12px;
+    }
+
+    .flow-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      width: 9px;
+      border-top: 1px solid var(--blue);
+    }
+
+    .flow-node b {
+      display: block;
+      font-size: 12px;
+      color: var(--fg);
+    }
+
+    .flow-node p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .flow-node .tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #0f3049;
+      color: #9bd3ff;
+      font-size: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      background: var(--surface-2);
+      color: var(--muted);
+    }
+
+    .tab.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--ink);
+      font-weight: 760;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 13px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .card p { margin: 0; }
+    .card ul { margin: 8px 0 0; padding-left: 18px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 620;
+      background: #0f141b;
+    }
+
+    .status-ok { color: var(--green); }
+    .status-warn { color: var(--amber); }
+    .status-bad { color: var(--red); }
+    .status-info { color: var(--cyan); }
+
+    .proto-shell {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      min-height: 560px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #0a0d12;
+    }
+
+    .proto-nav {
+      border-right: 1px solid var(--line);
+      padding: 12px;
+      background: #080a0d;
+      display: grid;
+      align-content: start;
+      gap: 7px;
+    }
+
+    .proto-nav div {
+      padding: 9px 10px;
+      border-radius: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .proto-nav div.active {
+      background: #102436;
+      color: var(--fg);
+    }
+
+    .proto-main {
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .proto-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+      margin-bottom: 9px;
+    }
+
+    .proto-kpi {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      min-height: 72px;
+    }
+
+    .proto-kpi span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .proto-kpi b {
+      display: block;
+      margin-top: 6px;
+      font-size: 16px;
+    }
+
+    .proto-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 9px;
+    }
+
+    .fake-chart {
+      height: 302px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 44px,
+        linear-gradient(90deg, rgba(43,53,66,.8) 1px, transparent 1px) 0 0 / 66px 100%,
+        #10151c;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fake-chart::before {
+      content: "";
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 50%;
+      height: 2px;
+      background: var(--blue);
+      box-shadow: 86px -40px 0 var(--green), 178px 24px 0 var(--red), 288px -54px 0 var(--amber), 420px 18px 0 var(--cyan), 540px -34px 0 var(--green);
+    }
+
+    .fake-chart::after {
+      content: "Keltner / MA cost zone";
+      position: absolute;
+      left: 68px;
+      right: 68px;
+      top: 32%;
+      height: 58px;
+      border: 1px solid rgba(245,184,75,.58);
+      background: rgba(245,184,75,.08);
+      border-radius: 7px;
+      padding: 8px;
+      color: var(--amber);
+      font-size: 11px;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .scenario {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 9px;
+      font-size: 11px;
+    }
+
+    .scenario b {
+      width: 25px;
+      height: 25px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: var(--surface-3);
+    }
+
+    .prd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .requirement {
+      display: grid;
+      grid-template-columns: 84px 1fr 80px;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .feedback {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      border-left: 1px solid var(--line);
+      background: #090c10;
+      padding: 16px;
+    }
+
+    .feedback h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .feedback p {
+      margin: 7px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: var(--surface);
+      color: var(--fg);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 118px;
+      resize: vertical;
+    }
+
+    .output {
+      white-space: pre-wrap;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      min-height: 160px;
+    }
+
+    .feedback-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 7px;
+      padding: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1280px) {
+      .app { grid-template-columns: 72px minmax(0, 1fr); }
+      .feedback { position: static; height: auto; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+      aside { padding: 14px 9px; }
+      .brand div:not(.brand-mark), .nav span, .left-meta { display: none; }
+      .nav a { justify-content: center; }
+      .hero, .two-col, .three-col, .prd-grid, .proto-grid { grid-template-columns: 1fr; }
+      .metric-grid, .proto-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow-node::after { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      .brand div:not(.brand-mark), .nav span { display: block; }
+      .nav a { justify-content: flex-start; }
+      .topbar { position: static; display: grid; }
+      .metric-grid, .proto-kpis, .flow, .prd-grid { grid-template-columns: 1fr; }
+      .proto-shell { grid-template-columns: 1fr; }
+      .proto-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); border-right: 0; border-bottom: 1px solid var(--line); }
+      .requirement { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark">H5</div>
+        <div>
+          <strong>Research PRD</strong>
+          <span>QuantDinger adaptation</span>
+        </div>
+      </div>
+      <nav class="nav" id="nav">
+        <a class="active" href="#overview"><i></i><span>总览</span></a>
+        <a href="#flow"><i></i><span>流程图</span></a>
+        <a href="#research"><i></i><span>调研</span></a>
+        <a href="#analysis"><i></i><span>产品分析</span></a>
+        <a href="#prd"><i></i><span>PRD</span></a>
+        <a href="#prototype"><i></i><span>原型图</span></a>
+        <a href="#review"><i></i><span>评审清单</span></a>
+      </nav>
+      <div class="left-meta">
+        Branch: feature/h5-ai-trading-command-center-prototype<br>
+        Issue: starkweng/QuantDinger#1<br>
+        Status: HTML review before Figma
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>H5 x QuantDinger 产品调研 / PRD / 原型工作台</h1>
+          <p>先用 HTML 把理解、取舍、流程和页面讲清楚；你确认后再进入 Figma。</p>
+        </div>
+        <div class="top-actions">
+          <button data-jump="#prototype">看原型</button>
+          <button data-jump="#prd">看 PRD</button>
+          <button class="primary" data-jump="#feedback-panel">写修改建议</button>
+        </div>
+      </header>
+
+      <section class="section" id="overview">
+        <div class="section-body hero">
+          <div class="hero-card">
+            <h2>结论：QuantDinger 可以作为骨架，H5 必须提供灵魂。</h2>
+            <p>QuantDinger 的价值在于把 AI 分析、指标 IDE、策略管理、实盘监控、交易机器人、券商接入、Agent Token 做成一个自托管量化工作台。H5 的价值在于把交易从“下单冲动”改造成“推演、等待、风控、执行、复盘”的纪律系统。</p>
+            <div class="principles">
+              <div class="principle"><b>不预测</b><span>只做价格路径推演和条件预案。</span></div>
+              <div class="principle"><b>不迷信策略</b><span>策略只是候选方案，任何策略都会失效。</span></div>
+              <div class="principle"><b>先认输</b><span>先知道最多亏多少，再讨论可能赚多少。</span></div>
+              <div class="principle"><b>会不下单</b><span>没有高盈亏比，就把交易权锁住。</span></div>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="metric-grid" style="grid-template-columns: 1fr 1fr;">
+              <div class="metric"><span>Borrow</span><strong>7 modules</strong><small>导航和产品闭环可直接学习</small></div>
+              <div class="metric"><span>Must Add</span><strong>Risk Kernel</strong><small>H5 的风控和不交易能力</small></div>
+              <div class="metric"><span>Execution</span><strong>3 modes</strong><small>SIGNAL / SEMI / AUTO</small></div>
+              <div class="metric"><span>Review</span><strong>HTML first</strong><small>确认后再进 Figma</small></div>
+            </div>
+            <p style="margin-top:14px;">本页右侧提供“修改建议面板”，你可以按模块写意见，一键生成给 Codex 的修改指令。HTML 会用 localStorage 保存草稿。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="flow">
+        <div class="section-head">
+          <h2>整体流程图</h2>
+          <span>原型图绘制页先看流程，再看界面</span>
+        </div>
+        <div class="section-body">
+          <div class="flow">
+            <div class="flow-node"><span class="tag">1 Input</span><b>Market & Broker Data</b><p>Binance、tokenized stocks、Alpaca、IBKR、MT5、贵金属、原油、外汇。</p></div>
+            <div class="flow-node"><span class="tag">2 Research</span><b>Multi-Agent Research</b><p>价格行为、VSA、Wyckoff、TradFi、新闻、风险官、反方辩论。</p></div>
+            <div class="flow-node"><span class="tag">3 Strategy</span><b>H5 Strategy Package</b><p>Excel 规则、指标解释、评分阈值、Pine / Python 回测版本。</p></div>
+            <div class="flow-node"><span class="tag">4 Scenario</span><b>Scenario Planner</b><p>未来 15/30/60 分钟 A/B/C/D 路径推演和操作预案。</p></div>
+            <div class="flow-node"><span class="tag">5 Gate</span><b>Risk Kernel</b><p>单笔亏损、日亏损、连续亏损、仓位、盈亏比、Kill Switch。</p></div>
+            <div class="flow-node"><span class="tag">6 Execute</span><b>Execution Desk</b><p>SIGNAL_ONLY、SEMI_AUTO、AUTO_API，全部由前端下命令。</p></div>
+            <div class="flow-node"><span class="tag">7 Learn</span><b>Audit & Evolution</b><p>每次下单、不下单、止损、风控拒绝都进入复盘和进化闭环。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="research">
+        <div class="section-head">
+          <h2>QuantDinger 调研</h2>
+          <span>真实登录后观察到的产品结构</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>模块</th><th>QuantDinger 现状</th><th>H5 适配判断</th><th>抄法</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>AI Asset Analysis</td><td>多市场、watchlist、AI 分析、历史分析入口。</td><td>适合改成 Research Mission Center。</td><td class="status-ok">深抄结构</td></tr>
+              <tr><td>Indicator Market</td><td>指标市场、我的指标、审核。</td><td>适合升级为 Strategy Registry，H5 只是其中一个 strategy package。</td><td class="status-ok">深抄信息架构</td></tr>
+              <tr><td>Indicator IDE</td><td>代码编辑、AI 生成、质量检查、图表、回测。</td><td>非常适合承载 H5 Python 策略和 Pine 版本对照。</td><td class="status-ok">重点照抄</td></tr>
+              <tr><td>Strategy & Live</td><td>策略管理、Live Overview、仓位、成交、执行记录。</td><td>改造成 Execution Command Center，接 H5 风控门。</td><td class="status-ok">重点照抄</td></tr>
+              <tr><td>Trading Bot</td><td>AI Smart Create、Grid、Martingale、Trend、DCA。</td><td>保留入口，但默认不能直接进入真钱自动执行。</td><td class="status-warn">谨慎学习</td></tr>
+              <tr><td>Live Broker Accounts</td><td>Crypto CEX、Alpaca、IBKR、MT5。</td><td>正好支持 crypto + TradFi 融合。</td><td class="status-ok">直接借鉴</td></tr>
+              <tr><td>Agent Tokens</td><td>外部 AI agent token、scope、paper-only、audit log。</td><td>是多 agent research 与执行权限边界的关键。</td><td class="status-ok">必须保留</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="analysis">
+        <div class="section-head">
+          <h2>产品分析</h2>
+          <span>QuantDinger 骨架 + H5 灵魂</span>
+        </div>
+        <div class="section-body">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="ia">信息架构</button>
+            <button class="tab" data-tab="h5">H5 差异化</button>
+            <button class="tab" data-tab="risk">风控价值</button>
+            <button class="tab" data-tab="agent">多 Agent</button>
+          </div>
+
+          <div class="tab-pane active" data-pane="ia">
+            <div class="three-col">
+              <div class="card"><h3>工作台闭环</h3><p>QuantDinger 已经把研究、写指标、回测、策略化、实盘和账户接入放到一个产品里。H5 不需要重造导航骨架。</p></div>
+              <div class="card"><h3>策略注册表</h3><p>H5 不是唯一策略，而是平台里的一个高优先级策略包。未来还有其他策略方案和资金管理方案并存。</p></div>
+              <div class="card"><h3>前端授权</h3><p>半自动和 API 自动交易不是策略本身决定，而是前端模式和 Risk Kernel 共同授权。</p></div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="h5">
+            <div class="two-col">
+              <div class="card"><h3>H5 不是指标集合</h3><p>H5 包含市场状态、多周期中轴、结构证据、Keltner/ATR、价量时空、评分准入、资金管理和执行模式。Keltner 是波动通道和风险距离，不是单独买卖信号。</p></div>
+              <div class="card"><h3>无招胜有招</h3><p>系统不迷信策略，不死扣指标，不执着拟合。真正的优势来自信息处理、冷静推演、风险纪律和多 agent 协作。</p></div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="risk">
+            <div class="three-col">
+              <div class="card"><h3>亏损可控</h3><p>我们不知道每单能赚多少，但可以通过算法和风控知道最多亏多少。</p></div>
+              <div class="card"><h3>不交易权</h3><p>市面多数系统都在教人下单；H5 必须教 AI 和人忍住不做。</p></div>
+              <div class="card"><h3>资金管理优先</h3><p>哪怕策略接近抛硬币，只要盈亏比和亏损控制占优，大样本才有赚钱基础。</p></div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="agent">
+            <div class="two-col">
+              <div class="card"><h3>工种分列</h3><ul><li>Price Action：结构和关键位</li><li>VSA：成交额和分歧</li><li>Wyckoff：吸筹/派发/弹簧</li><li>Risk Officer：拒绝高风险动作</li></ul></div>
+              <div class="card"><h3>争论机制</h3><p>参考 TradingAgents 的 Bull/Bear/Risk debate，让研究结论不只是一种声音。最终输出不是“买/卖”，而是路径、证据、条件、风险和授权状态。</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="prd">
+        <div class="section-head">
+          <h2>PRD 摘要</h2>
+          <span>用于指挥后续开发</span>
+        </div>
+        <div class="section-body">
+          <div class="prd-grid">
+            <div class="card">
+              <h3>产品目标</h3>
+              <p>基于 QuantDinger 的自托管量化工作台，构建一套 H5 AI 主动交易系统。系统第一目标是赚钱，但实现路径不是预测市场，而是推演路径、控制亏损、筛选高盈亏比机会，并严格限制执行权限。</p>
+            </div>
+            <div class="card">
+              <h3>目标用户</h3>
+              <p>主动交易者、量化研究者、crypto + TradFi 融合交易团队、需要 AI research 和风控纪律的半自动/自动交易操盘者。</p>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div class="requirement"><b>P0</b><div>H5 StrategySpec：把 Excel 逻辑、评分、指标、时间周期、中轴、风控参数结构化。</div><span class="status-ok">Must</span></div>
+            <div class="requirement"><b>P0</b><div>Risk Kernel：单笔/日内/连续亏损、最大回撤、仓位、盈亏比、kill switch、风控拒绝原因。</div><span class="status-ok">Must</span></div>
+            <div class="requirement"><b>P0</b><div>Scenario Planner：未来 15/30/60 分钟 A/B/C/D 价格路径推演和操作预案。</div><span class="status-ok">Must</span></div>
+            <div class="requirement"><b>P0</b><div>Execution Mode：SIGNAL_ONLY / SEMI_AUTO / AUTO_API，全部前端显式切换并写入审计。</div><span class="status-ok">Must</span></div>
+            <div class="requirement"><b>P1</b><div>Multi-Agent Research：不同工种 agent 出具结构化 brief，并通过 debate 汇总。</div><span class="status-info">Next</span></div>
+            <div class="requirement"><b>P1</b><div>Backtest Lab：TradingView Pine + Python 回测 + OOS + walk-forward + 过拟合惩罚。</div><span class="status-info">Next</span></div>
+            <div class="requirement"><b>P2</b><div>Live API Execution：只在 paper/shadow 通过、Risk Kernel 授权、人工确认后开放。</div><span class="status-warn">Later</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="prototype">
+        <div class="section-head">
+          <h2>产品原型图</h2>
+          <span>顶部流程图之后的第一屏工作台</span>
+        </div>
+        <div class="section-body">
+          <div class="proto-shell">
+            <div class="proto-nav">
+              <div class="active">Command Center</div>
+              <div>Research Agents</div>
+              <div>H5 Strategy Package</div>
+              <div>Scenario Planner</div>
+              <div>Backtest Lab</div>
+              <div>Risk Kernel</div>
+              <div>Execution Desk</div>
+              <div>Broker & Data</div>
+            </div>
+            <div class="proto-main">
+              <div class="proto-kpis">
+                <div class="proto-kpi"><span>Market State</span><b class="status-warn">转折观察</b></div>
+                <div class="proto-kpi"><span>H5 Score</span><b>72 / 100</b></div>
+                <div class="proto-kpi"><span>Risk Budget</span><b class="status-ok">0.42%</b></div>
+                <div class="proto-kpi"><span>Execution</span><b class="status-info">Signal</b></div>
+                <div class="proto-kpi"><span>Advice</span><b class="status-warn">等待</b></div>
+              </div>
+              <div class="proto-grid">
+                <div class="fake-chart"></div>
+                <div class="scenario-list">
+                  <div class="scenario"><b>A</b><span>放量突破并站回中轴上方</span><em class="status-ok">观察</em></div>
+                  <div class="scenario"><b>B</b><span>回踩 Keltner 中轨且量能萎缩</span><em class="status-warn">试错</em></div>
+                  <div class="scenario"><b>C</b><span>假突破后跌回密集区</span><em class="status-bad">拒绝</em></div>
+                  <div class="scenario"><b>D</b><span>横盘且评分低于阈值</span><em>不下单</em></div>
+                  <div class="card"><h3>Risk Kernel</h3><p>Research 分不足，AUTO_API 被锁。允许 SIGNAL_ONLY 输出预案，不允许挂单。</p></div>
+                  <div class="card"><h3>Decision Log</h3><p>每一次等待、拒绝、下单、止损、撤单都必须记录理由。</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="review">
+        <div class="section-head">
+          <h2>评审清单</h2>
+          <span>确认后再进入 Figma</span>
+        </div>
+        <div class="section-body">
+          <div class="two-col">
+            <div class="card">
+              <h3>需要你确认</h3>
+              <ul>
+                <li>QuantDinger 是否作为主骨架继续抄。</li>
+                <li>H5 是否作为第一套 strategy package，而不是唯一策略。</li>
+                <li>Command Center 第一屏是否先突出推演和风控，而不是下单。</li>
+                <li>右侧反馈面板是否足够方便你提修改建议。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>我建议下一步</h3>
+              <ul>
+                <li>你先在右侧写修改建议。</li>
+                <li>我按建议更新 HTML 到 v0.2。</li>
+                <li>你确认结构后，再进入 Figma 高保真。</li>
+                <li>Figma 确认后，再做 Vue 前端开发计划。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="feedback" id="feedback-panel">
+      <h2>给 Codex 的修改建议</h2>
+      <p>这里不是假交互：你可以把意见写成结构化内容，HTML 会保存草稿，并生成一段可以直接发给我的修改指令。</p>
+
+      <div class="field">
+        <label>要修改的模块</label>
+        <select id="fb-module">
+          <option>总览</option>
+          <option>流程图</option>
+          <option>QuantDinger 调研</option>
+          <option>产品分析</option>
+          <option>PRD</option>
+          <option>产品原型图</option>
+          <option>视觉风格</option>
+          <option>其它</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>优先级</label>
+        <select id="fb-priority">
+          <option>P0 必须改</option>
+          <option>P1 应该改</option>
+          <option>P2 可以优化</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>一句话结论</label>
+        <input id="fb-title" placeholder="例如：流程图要突出 Risk Kernel 在执行前拦截">
+      </div>
+
+      <div class="field">
+        <label>具体修改意见</label>
+        <textarea id="fb-detail" placeholder="写你想改的内容、原因、希望呈现成什么样。"></textarea>
+      </div>
+
+      <div class="field">
+        <label>确认状态</label>
+        <select id="fb-status">
+          <option>未确认，先讨论</option>
+          <option>方向正确，按建议更新</option>
+          <option>此页通过，进入 Figma 前准备</option>
+        </select>
+      </div>
+
+      <div class="feedback-actions">
+        <button id="saveFeedback">保存草稿</button>
+        <button id="clearFeedback">清空</button>
+        <button class="primary" id="generatePrompt">生成指令</button>
+        <button id="copyPrompt">复制指令</button>
+      </div>
+
+      <div class="output" id="promptOutput">生成后的修改指令会显示在这里。</div>
+
+      <div class="note">
+        建议你把生成后的指令直接发给我。下一轮我会按这段内容更新 HTML 文件，并继续保持 GitHub issue / 分支同步。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const storageKey = "h5_quantdinger_feedback_v1";
+    const fields = ["fb-module", "fb-priority", "fb-title", "fb-detail", "fb-status"];
+    const $ = (id) => document.getElementById(id);
+
+    function collectFeedback() {
+      return {
+        module: $("fb-module").value,
+        priority: $("fb-priority").value,
+        title: $("fb-title").value.trim(),
+        detail: $("fb-detail").value.trim(),
+        status: $("fb-status").value,
+      };
+    }
+
+    function renderPrompt() {
+      const fb = collectFeedback();
+      const prompt = [
+        "请更新 QuantDinger/H5 HTML 调研 PRD 工作台。",
+        "",
+        "模块：" + fb.module,
+        "优先级：" + fb.priority,
+        "状态：" + fb.status,
+        "结论：" + (fb.title || "未填写"),
+        "",
+        "具体修改意见：",
+        fb.detail || "未填写",
+        "",
+        "要求：",
+        "1. 继续用 HTML 做调研、产品分析、PRD 和原型，不要先进入 Figma。",
+        "2. 产品原型图页顶部保留流程图。",
+        "3. 保留可交互的修改建议面板。",
+        "4. 不要丢掉 H5 Excel 交易系统本身的策略逻辑和风控核心。"
+      ].join("\\n");
+      $("promptOutput").textContent = prompt;
+      return prompt;
+    }
+
+    function saveFeedback() {
+      localStorage.setItem(storageKey, JSON.stringify(collectFeedback()));
+    }
+
+    function loadFeedback() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        $("fb-module").value = data.module || $("fb-module").value;
+        $("fb-priority").value = data.priority || $("fb-priority").value;
+        $("fb-title").value = data.title || "";
+        $("fb-detail").value = data.detail || "";
+        $("fb-status").value = data.status || $("fb-status").value;
+        renderPrompt();
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.tab;
+        document.querySelectorAll(".tab").forEach((node) => node.classList.remove("active"));
+        document.querySelectorAll(".tab-pane").forEach((node) => node.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector('[data-pane="' + id + '"]').classList.add("active");
+      });
+    });
+
+    document.querySelectorAll("[data-jump]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.querySelector(button.dataset.jump);
+        if (!target) return;
+        const y = target.getBoundingClientRect().top + window.pageYOffset - 72;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      });
+    });
+
+    document.querySelectorAll(".nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".nav a").forEach((node) => node.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
+
+    $("saveFeedback").addEventListener("click", () => {
+      saveFeedback();
+      renderPrompt();
+      $("saveFeedback").textContent = "已保存";
+      setTimeout(() => $("saveFeedback").textContent = "保存草稿", 1200);
+    });
+
+    $("clearFeedback").addEventListener("click", () => {
+      fields.forEach((id) => {
+        const el = $(id);
+        if (el.tagName === "SELECT") el.selectedIndex = 0;
+        else el.value = "";
+      });
+      localStorage.removeItem(storageKey);
+      $("promptOutput").textContent = "生成后的修改指令会显示在这里。";
+    });
+
+    $("generatePrompt").addEventListener("click", () => {
+      saveFeedback();
+      renderPrompt();
+    });
+
+    $("copyPrompt").addEventListener("click", async () => {
+      const prompt = renderPrompt();
+      try {
+        await navigator.clipboard.writeText(prompt);
+        $("copyPrompt").textContent = "已复制";
+      } catch (err) {
+        $("copyPrompt").textContent = "复制失败";
+      }
+      setTimeout(() => $("copyPrompt").textContent = "复制指令", 1200);
+    });
+
+    loadFeedback();
+  </script>
+</body>
+</html>
