@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H5 AI Trading Command Center Prototype</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #151920;
+      --panel-2: #1c222b;
+      --line: #2a3340;
+      --text: #e8edf3;
+      --muted: #8f9dad;
+      --green: #28c986;
+      --red: #ff5d73;
+      --blue: #4da3ff;
+      --amber: #f5b84b;
+      --cyan: #4dd8e8;
+      --violet: #9d7cff;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 232px 1fr;
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--line);
+      background: #080a0d;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #061014;
+    }
+
+    .brand strong { display: block; font-size: 15px; }
+    .brand span { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    nav { display: grid; gap: 6px; }
+    .nav-item {
+      border-radius: 7px;
+      padding: 10px 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .nav-item.active { background: #0e3d5d; color: #f7fbff; }
+    .nav-item i {
+      width: 15px;
+      height: 15px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      opacity: .9;
+    }
+
+    .side-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    main { padding: 18px 22px 28px; min-width: 0; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .title h1 { margin: 0; font-size: 23px; font-weight: 760; }
+    .title p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+
+    .actions { display: flex; gap: 8px; align-items: center; }
+    button, .chip {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    button.primary { background: var(--blue); border-color: var(--blue); color: #04101f; font-weight: 700; }
+    button.danger { background: #35171d; color: #ffb1bd; border-color: #65313b; }
+    button.ghost { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+    .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-bottom: 12px; }
+    .layout { grid-template-columns: 1.35fr .88fr .72fr; align-items: start; }
+    .lower { grid-template-columns: 1fr 1fr 1fr; margin-top: 12px; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      min-width: 0;
+    }
+
+    .panel-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .panel-head strong { font-size: 13px; }
+    .panel-head span { color: var(--muted); font-size: 11px; }
+    .panel-body { padding: 14px; }
+
+    .kpi {
+      padding: 13px;
+      min-height: 88px;
+    }
+    .kpi span { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .kpi strong { display: block; font-size: 24px; margin: 10px 0 4px; }
+    .kpi em { font-style: normal; color: var(--muted); font-size: 11px; }
+
+    .ok { color: var(--green); }
+    .bad { color: var(--red); }
+    .warn { color: var(--amber); }
+    .info { color: var(--cyan); }
+
+    .chart {
+      height: 420px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 52px,
+        linear-gradient(90deg, rgba(42,51,64,.75) 1px, transparent 1px) 0 0 / 72px 100%;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    .path {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      height: 2px;
+      background: var(--blue);
+      top: 48%;
+      box-shadow: 90px -42px 0 var(--green), 190px 26px 0 var(--red), 305px -70px 0 var(--amber), 430px 16px 0 var(--cyan), 560px -38px 0 var(--violet);
+    }
+    .path::before, .path::after {
+      content: "";
+      position: absolute;
+      inset: -70px 20px auto 20px;
+      height: 170px;
+      border: 1px dashed rgba(77,163,255,.38);
+      border-radius: 50%;
+      transform: rotate(-8deg);
+    }
+    .price-label {
+      position: absolute;
+      right: 22px;
+      top: 47%;
+      background: var(--green);
+      color: #03130d;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .zone {
+      position: absolute;
+      left: 10%;
+      right: 12%;
+      height: 54px;
+      border: 1px solid rgba(245,184,75,.55);
+      background: rgba(245,184,75,.08);
+      top: 33%;
+      border-radius: 6px;
+    }
+    .zone span {
+      position: absolute;
+      top: -22px;
+      color: var(--amber);
+      font-size: 11px;
+    }
+    .scenario {
+      display: grid;
+      gap: 8px;
+    }
+    .scenario-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-2);
+      font-size: 12px;
+    }
+    .scenario-row b {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: #263241;
+    }
+    .scenario-row small { color: var(--muted); display: block; margin-top: 3px; }
+
+    .score-list, .risk-list, .agent-list { display: grid; gap: 8px; }
+    .score-line {
+      display: grid;
+      grid-template-columns: 94px 1fr 38px;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+    }
+    .bar {
+      height: 8px;
+      background: #0c1117;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .bar i { display: block; height: 100%; background: var(--blue); }
+    .bar.green i { background: var(--green); }
+    .bar.amber i { background: var(--amber); }
+    .bar.red i { background: var(--red); }
+
+    .agent, .risk-item {
+      padding: 10px;
+      border-radius: 7px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+    .agent strong, .risk-item strong { display: flex; justify-content: space-between; gap: 8px; }
+    .agent p, .risk-item p { margin: 6px 0 0; color: var(--muted); line-height: 1.45; }
+
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .mode {
+      padding: 12px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      min-height: 82px;
+    }
+    .mode.active { border-color: var(--blue); background: #102436; }
+    .mode strong { font-size: 12px; }
+    .mode p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 9px 7px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 72px 1fr; }
+      aside { padding: 14px 9px; }
+      .brand div, .nav-item span, .side-footer { display: none; }
+      .nav-item { justify-content: center; }
+      .layout, .lower, .kpis { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">H5</div>
+        <div>
+          <strong>AI Trading OS</strong>
+          <span>赚钱是目的，风控是引擎</span>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-item active"><i></i><span>Command Center</span></div>
+        <div class="nav-item"><i></i><span>Research Agents</span></div>
+        <div class="nav-item"><i></i><span>H5 Strategy Package</span></div>
+        <div class="nav-item"><i></i><span>Scenario Planner</span></div>
+        <div class="nav-item"><i></i><span>Backtest Lab</span></div>
+        <div class="nav-item"><i></i><span>Risk Kernel</span></div>
+        <div class="nav-item"><i></i><span>Execution Desk</span></div>
+        <div class="nav-item"><i></i><span>Broker & Data</span></div>
+        <div class="nav-item"><i></i><span>Audit & Learning</span></div>
+      </nav>
+      <div class="side-footer">
+        Mode: SIGNAL_ONLY<br>
+        Max daily loss: 1.8%<br>
+        Kill switch: armed
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title">
+          <h1>H5 AI Trading Command Center</h1>
+          <p>不预测市场，只推演路径；不迷信策略，只执行高盈亏比和严明风控。</p>
+        </div>
+        <div class="actions">
+          <span class="chip">BTC/USDT · 15m 中轴</span>
+          <button class="ghost">同步 Binance</button>
+          <button class="danger">Kill Switch</button>
+          <button class="primary">生成 60 分钟预案</button>
+        </div>
+      </div>
+
+      <section class="grid kpis">
+        <div class="panel kpi"><span>Market State</span><strong class="warn">转折观察</strong><em>趋势未确认，不追单</em></div>
+        <div class="panel kpi"><span>H5 Score</span><strong>72 / 100</strong><em>未达自动执行阈值</em></div>
+        <div class="panel kpi"><span>Risk Budget</span><strong class="ok">0.42%</strong><em>本单最大亏损</em></div>
+        <div class="panel kpi"><span>R/R Plan</span><strong>1 : 3.4</strong><em>止损明确，目标分层</em></div>
+        <div class="panel kpi"><span>Execution Mode</span><strong class="info">Signal</strong><em>禁止自动下单</em></div>
+        <div class="panel kpi"><span>Trade Advice</span><strong class="warn">等待</strong><em>会不下单也是能力</em></div>
+      </section>
+
+      <section class="grid layout">
+        <div class="panel">
+          <div class="panel-head">
+            <strong>价格路径推演 · 未来 60 分钟</strong>
+            <span>价 / 量 / 时间 / 空间 / 均线成本</span>
+          </div>
+          <div class="chart">
+            <div class="zone"><span>均线密集与 Keltner 回踩观察区</span></div>
+            <div class="path"></div>
+            <div class="price-label">67,420</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <strong>A/B/C/D 预案</strong>
+            <span>先准备，再行动</span>
+          </div>
+          <div class="panel-body scenario">
+            <div class="scenario-row"><b>A</b><div>放量突破并站回中轴上方<small>只给信号，等待回踩确认</small></div><span class="ok">可观察</span></div>
+            <div class="scenario-row"><b>B</b><div>回踩 Keltner 中轨但量能萎缩<small>候选低风险试错位</small></div><span class="warn">半仓以下</span></div>
+            <div class="scenario-row"><b>C</b><div>假突破后跌回密集区<small>取消多头预案，等待 2B</small></div><span class="bad">拒绝</span></div>
+            <div class="scenario-row"><b>D</b><div>继续横盘且分数低于 70<small>不下单，刷新预案</small></div><span>等待</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <strong>H5 评分拆解</strong>
+            <span>分数不是命令</span>
+          </div>
+          <div class="panel-body score-list">
+            <div class="score-line"><span>结构</span><div class="bar green"><i style="width:78%"></i></div><b>78</b></div>
+            <div class="score-line"><span>价量</span><div class="bar amber"><i style="width:66%"></i></div><b>66</b></div>
+            <div class="score-line"><span>波动</span><div class="bar green"><i style="width:74%"></i></div><b>74</b></div>
+            <div class="score-line"><span>时间</span><div class="bar amber"><i style="width:58%"></i></div><b>58</b></div>
+            <div class="score-line"><span>资金风控</span><div class="bar green"><i style="width:82%"></i></div><b>82</b></div>
+            <div class="score-line"><span>Research</span><div class="bar red"><i style="width:48%"></i></div><b>48</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid lower">
+        <div class="panel">
+          <div class="panel-head">
+            <strong>Multi-Agent Research</strong>
+            <span>不同工种互相反驳</span>
+          </div>
+          <div class="panel-body agent-list">
+            <div class="agent"><strong>Price Action <span class="ok">ready</span></strong><p>识别 2B、突破/假突破、均线密集、必由之路。</p></div>
+            <div class="agent"><strong>VSA / Volume <span class="warn">running</span></strong><p>检查成交额突变、分歧释放、量价背离。</p></div>
+            <div class="agent"><strong>Risk Officer <span class="bad">blocked</span></strong><p>Research 分不足，AUTO_API 被拒绝。</p></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <strong>Risk Kernel</strong>
+            <span>先认输，再赚钱</span>
+          </div>
+          <div class="panel-body risk-list">
+            <div class="risk-item"><strong>最大单笔亏损 <span class="ok">0.42%</span></strong><p>止损价 66,980，超限自动降仓。</p></div>
+            <div class="risk-item"><strong>连续亏损冷却 <span>2 / 3</span></strong><p>下一次失败进入 90 分钟停止交易。</p></div>
+            <div class="risk-item"><strong>今日剩余额度 <span class="warn">1.38%</span></strong><p>日亏损触达 1.8% 后全局只读。</p></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <strong>Execution Mode</strong>
+            <span>前端下命令，风控核授权</span>
+          </div>
+          <div class="panel-body">
+            <div class="mode-switch">
+              <div class="mode active"><strong>SIGNAL_ONLY</strong><p>只输出信号、理由、风险，不挂单。</p></div>
+              <div class="mode"><strong>SEMI_AUTO</strong><p>允许生成挂单草案，人工确认。</p></div>
+              <div class="mode"><strong>AUTO_API</strong><p>必须 paper/shadow 通过后开放。</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:12px;">
+        <div class="panel-head">
+          <strong>Decision Log</strong>
+          <span>每一次不下单也要记录</span>
+        </div>
+        <div class="panel-body">
+          <table>
+            <thead>
+              <tr><th>Time</th><th>Event</th><th>Decision</th><th>Reason</th><th>Next Check</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>05:24</td><td>H5 score updated</td><td class="warn">Wait</td><td>Research score under threshold</td><td>15m close</td></tr>
+              <tr><td>05:18</td><td>Risk kernel review</td><td class="bad">Reject AUTO</td><td>Only signal mode allowed</td><td>after backtest</td></tr>
+              <tr><td>05:06</td><td>Scenario generated</td><td class="ok">Plan ready</td><td>A/B/C/D paths prepared</td><td>volume spike</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
