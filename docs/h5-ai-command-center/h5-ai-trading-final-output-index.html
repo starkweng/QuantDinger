@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>H5 AI Trading Command Center - 最终输出总览</title>
+  <title>H5 AI Trading Command Center - 最终输出包</title>
   <style>
     :root {
       --bg: #f5f7fa;
@@ -343,6 +343,32 @@
     }
     .callout.red { border-color: #f3b7c1; background: var(--red-soft); color: #792034; }
     .callout.green { border-color: #bde7d4; background: var(--green-soft); color: #164d38; }
+    .callout.amber { border-color: #f0cf8b; background: var(--amber-soft); color: #6b4300; }
+
+    .split-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .checklist strong { color: var(--ink); }
 
     .feedback textarea {
       width: 100%;
@@ -361,7 +387,7 @@
       .layout { grid-template-columns: 1fr; }
       aside { position: static; height: auto; }
       nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .hero-grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .hero-grid, .grid-2, .grid-3, .grid-4, .split-list { grid-template-columns: 1fr; }
       .artifact { grid-template-columns: 1fr; }
     }
 
@@ -381,13 +407,14 @@
       <div class="brand">
         <div class="brand-mark">H5</div>
         <div>
-          <strong>最终输出总览</strong>
-          <span>Delivery Index v0.1</span>
+          <strong>最终输出包</strong>
+          <span>Delivery Package v0.2</span>
         </div>
       </div>
       <nav>
         <a class="active" href="#summary"><i></i><span>最终结论</span></a>
         <a href="#tenx"><i></i><span>10 分升级</span></a>
+        <a href="#requirements"><i></i><span>需求描述</span></a>
         <a href="#outputs"><i></i><span>交付物</span></a>
         <a href="#read-order"><i></i><span>阅读顺序</span></a>
         <a href="#product"><i></i><span>产品定义</span></a>
@@ -396,21 +423,21 @@
         <a href="#feedback"><i></i><span>修改意见</span></a>
       </nav>
       <div class="side-meta">
-        Date: 2026-05-24<br>
+        Date: 2026-05-25<br>
         Source: H5 Excel + QuantDinger fork<br>
         Branch: feature/h5-ai-trading-command-center-prototype<br>
-        Status: ready for review
+        Status: PRD v0.3 organized
       </div>
     </aside>
 
     <main>
       <header class="topbar">
         <div>
-          <h1>H5 AI Trading Command Center 最终输出总览</h1>
-          <p>把 Excel 理解、策略、PRD、QuantDinger 调研、可行性、三轮需求打磨和 10 分价值升级整理成一个入口。</p>
+          <h1>H5 AI Trading Command Center 最终输出包</h1>
+          <p>把 Excel 理解、策略、PRD、QuantDinger 调研、可行性、三轮需求打磨、10 分价值升级和 PRD v0.3 整理成一个入口。</p>
         </div>
         <div class="top-actions">
-          <a href="#tenx">看 10 分升级</a>
+          <a href="#requirements">看需求描述</a>
           <a class="primary" href="#next">看下一步</a>
         </div>
       </header>
@@ -418,14 +445,14 @@
       <section class="section" id="summary">
         <div class="section-body hero-grid">
           <div class="hero-card">
-            <h2>你要的东西已经升级成三层：H5 策略源包 + AI Trading Command Center 产品包 + 10 分价值飞控标准。</h2>
-            <p>第一层回答“这个 H5 交易系统到底是什么、怎么量化、怎么回测、PRD 怎么写”。第二层回答“如何参考 QuantDinger，把它做成具备 research、技术判断、量化交易、通知、受控自我交易、风控资管、安全、自我成长的产品”。第三层回答“如何让它不是普通工具，而是长期提高真实交易质量的交易飞控系统”。</p>
+            <h2>你要的东西已经升级成四层：H5 策略源包 + AI Trading Command Center 产品包 + PRD v0.3 + 10 分价值飞控标准。</h2>
+            <p>第一层回答“这个 H5 交易系统到底是什么、怎么量化、怎么回测”。第二层回答“如何参考 QuantDinger，把它做成具备 research、技术判断、量化交易、通知、受控自我交易、风控资管、安全、自我成长的产品”。第三层用 PRD v0.3 固定 P0 开发范围。第四层回答“如何让它不是普通工具，而是长期提高真实交易质量的交易飞控系统”。</p>
             <div class="callout">
               总判断：H5 不是单一策略和指标机器人，而是一套市场观察、结构判断、场景推演、评分、风控、执行和复盘的交易决策框架。10 分版本不是让 AI 多下单，而是让系统长期减少坏交易、锁住最大亏损、沉淀复盘记忆，并把你的 H5 思想变成私有优势。
             </div>
           </div>
           <div class="metric-grid">
-            <div class="metric"><span>Main Output</span><b>3 层交付</b><small>H5 源包 + 产品包 + 10 分升级。</small></div>
+            <div class="metric"><span>Main Output</span><b>4 层交付</b><small>H5 源包 + 产品包 + PRD v0.3 + 10 分升级。</small></div>
             <div class="metric"><span>Core System</span><b>Risk Kernel</b><small>所有交易动作先过确定性风控。</small></div>
             <div class="metric"><span>10X Shape</span><b>Flight Control</b><small>交易飞控系统，不是交易机器人。</small></div>
             <div class="metric"><span>Review Mode</span><b>HTML-first</b><small>先看 HTML，确认后再进 Figma/开发。</small></div>
@@ -462,15 +489,107 @@
         </div>
       </section>
 
+      <section class="section" id="requirements">
+        <div class="section-head">
+          <div>
+            <h2>1. HTML 需求描述</h2>
+            <p>这一段是给你快速看需求的，不需要先读完整 PRD。</p>
+          </div>
+          <span class="badge green">Requirement summary</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-3">
+            <div class="card">
+              <h3>要做什么</h3>
+              <p>做一套 H5 AI Trading Flight Control System。它不是自动喊单机器人，而是把 research、H5 技术判断、场景推演、风险预算、Signal/Paper、复盘进化连成一个闭环。</p>
+            </div>
+            <div class="card">
+              <h3>给谁用</h3>
+              <p>P0 先服务 Stark 自用交易工作流。目标是每天围绕重点标的快速判断：能不能做、为什么做或不做、最多亏多少、接下来 15/30/60 分钟怎么预案。</p>
+            </div>
+            <div class="card">
+              <h3>为什么现在做</h3>
+              <p>AI 的优势不是更冲动地下单，而是更高效地处理信息、更冷静地执行风控、更稳定地记录决策，并通过复盘形成私有交易记忆。</p>
+            </div>
+          </div>
+
+          <div class="split-list" style="margin-top:12px;">
+            <div class="card">
+              <h3>P0 必做页面</h3>
+              <ul class="checklist">
+                <li><strong>Flight Cockpit：</strong>一眼看到市场状态、H5 分数、风险预算、执行模式和下一步动作。</li>
+                <li><strong>Research Desk：</strong>创建研究任务，沉淀 evidence packet、bull/bear/risk debate 和来源新鲜度。</li>
+                <li><strong>H5 StrategySpec：</strong>字段化中轴、确认周期、Keltner/ATR、MA、结构、评分、失效条件和资管模板。</li>
+                <li><strong>Scenario Planner：</strong>预演 A/B/C/D 多路径，而不是预测单一路径。</li>
+                <li><strong>Risk Kernel：</strong>计算最大亏损、单笔风险、日损、连续亏损和拒绝原因。</li>
+                <li><strong>Signal/Paper Desk：</strong>P0 只输出信号和 paper intent，不做真钱 live order。</li>
+                <li><strong>Decision Ledger + Weekly Review：</strong>记录信号、等待、拒绝、止损、错过机会，并转成候选改进。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>验收标准</h3>
+              <ul class="checklist">
+                <li><strong>Bad Trade Avoided：</strong>系统能记录被风控拒绝或建议等待后，实际证明避免的坏交易。</li>
+                <li><strong>Max Loss Known Rate = 100%：</strong>任何信号没有最大亏损就不能进入执行台。</li>
+                <li><strong>Evidence Coverage >= 90%：</strong>重要判断必须有来源、有时间戳、有反方观点。</li>
+                <li><strong>Risk Rejection Quality >= 95%：</strong>所有拒绝都要有规则 ID 和可复盘原因。</li>
+                <li><strong>Scenario Prepared = 100%：</strong>重点标的必须有 A/B/C/D 预案和失效条件。</li>
+                <li><strong>Review Conversion：</strong>每周能从真实结果里输出保留、降级、测试、禁止清单。</li>
+              </ul>
+            </div>
+          </div>
+
+          <table style="margin-top:12px;">
+            <thead>
+              <tr><th>核心对象</th><th>需求含义</th><th>开发承接</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>ResearchMission</strong></td><td>一次研究任务，定义标的、市场、时间窗口和研究问题。</td><td>后端任务表 + agent 调度输入。</td></tr>
+              <tr><td><strong>EvidencePacket</strong></td><td>带来源的研究证据包，包含多空观点、风险和新鲜度。</td><td>research 存储 + 引用追踪。</td></tr>
+              <tr><td><strong>StrategySpec</strong></td><td>H5 规则版本，把 Excel 逻辑字段化。</td><td>策略注册、Pine/Python 映射、版本管理。</td></tr>
+              <tr><td><strong>SignalCard</strong></td><td>策略输出卡，不等于下单命令。</td><td>前端信号展示 + 风控输入。</td></tr>
+              <tr><td><strong>ScenarioPlan</strong></td><td>15/30/60 分钟 A/B/C/D 路径预案。</td><td>临盘推演 UI + 通知。</td></tr>
+              <tr><td><strong>RiskDecision</strong></td><td>批准、拒绝、降级或冻结的确定性风控结果。</td><td>Risk Kernel 核心输出。</td></tr>
+              <tr><td><strong>DecisionLedgerEntry</strong></td><td>记录每一次判断、等待、拒绝、信号、错过和复盘。</td><td>审计日志 + 自我成长输入。</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout red">
+            P0 红线：不接真钱自动交易，不让 LLM 持有交易 API key，不让 AI 修改风控预算，不把 Pine 回测当收益证明，不用“信号数量”衡量产品价值。
+          </div>
+          <div class="callout green">
+            完整需求文档：<a href="h5-ai-trading-prd-v0.3.html">打开 h5-ai-trading-prd-v0.3.html</a>。
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="outputs">
         <div class="section-head">
           <div>
-            <h2>1. 交付物总表</h2>
+            <h2>2. 交付物总表</h2>
             <p>你现在要看哪个问题，就打开对应文件。</p>
           </div>
           <span class="badge blue">Deliverables</span>
         </div>
         <div class="section-body">
+          <div class="artifact">
+            <div><span class="type">源文件</span></div>
+            <div>
+              <h3>H5 交易系统 Excel 原表</h3>
+              <p>整个系统的原始逻辑来源。后续所有策略、PRD、架构和原型都必须回到这张表校验，不允许只保留 H5 原则而丢掉表格里的系统行为。</p>
+            </div>
+            <a class="open" href="file:///Users/mac/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/slamass_8bb7/msg/file/2025-08/H5%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F%2020.6.29.xlsx">打开 Excel</a>
+          </div>
+
+          <div class="artifact">
+            <div><span class="type">源包 README</span></div>
+            <div>
+              <h3>H5 Trading System v0.2 README</h3>
+              <p>记录 v0.2 输出包的文件结构、10 分升级阅读方式、源 Excel 路径和核心修正，适合作为 H5 源层索引。</p>
+            </div>
+            <a class="open" href="../../../../outputs/h5-trading-system-v0.2/README.md">打开 README</a>
+          </div>
+
           <div class="artifact">
             <div><span class="type">10 分升级</span></div>
             <div>
@@ -569,13 +688,36 @@
             </div>
             <a class="open" href="h5-ai-command-center-prototype.html">打开原型</a>
           </div>
+
+          <h3 style="font-size:14px;margin:18px 0 8px;">输出目录矩阵</h3>
+          <table>
+            <thead>
+              <tr><th>层级</th><th>文件</th><th>用途</th><th>当前状态</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>源逻辑</strong></td><td>H5交易系统 20.6.29.xlsx</td><td>H5 原始交易系统、评分、指标、资管风控和执行边界来源。</td><td><span class="badge green">源头</span></td></tr>
+              <tr><td><strong>源逻辑</strong></td><td>README.md</td><td>H5 v0.2 源包说明、源 Excel 路径、核心修正和 10 分阅读方式。</td><td><span class="badge green">已整理</span></td></tr>
+              <tr><td><strong>源逻辑</strong></td><td>h5-trading-system-analysis-v0.2.html</td><td>Excel 深度理解、指标用法、Keltner/ATR、Wyckoff/VSA、资金管理解释。</td><td><span class="badge green">已完成</span></td></tr>
+              <tr><td><strong>策略</strong></td><td>h5_structure_pa_vsa_strategy_v0_2.pine</td><td>TradingView 回测脚手架，用来验证结构化规则，不作为 live 证明。</td><td><span class="badge blue">可测试</span></td></tr>
+              <tr><td><strong>研究</strong></td><td>research-bibliography.md</td><td>书籍、文章、指标、方法和开源项目资料索引。</td><td><span class="badge green">已整理</span></td></tr>
+              <tr><td><strong>产品</strong></td><td>AI_Trading_Command_Center_PRD_v0.2.md</td><td>早期 AI Trading Command Center PRD，用于对照 v0.3 的收窄和升级。</td><td><span class="badge">历史版本</span></td></tr>
+              <tr><td><strong>产品</strong></td><td>h5-ai-trading-prd-v0.3.html</td><td>P0 交易飞控 MVP 的正式需求描述。</td><td><span class="badge green">主 PRD</span></td></tr>
+              <tr><td><strong>产品</strong></td><td>quantdinger-product-analysis-cn.md</td><td>QuantDinger 产品结构、可抄模块和 H5 适配路线分析。</td><td><span class="badge green">已完成</span></td></tr>
+              <tr><td><strong>产品</strong></td><td>h5-quantdinger-research-prd-workbench.html</td><td>QuantDinger 调研、产品分析、流程图、原型和反馈区。</td><td><span class="badge blue">可评审</span></td></tr>
+              <tr><td><strong>原型</strong></td><td>h5-ai-command-center-prototype.html</td><td>早期静态原型，后续会升级成真实 P0 页面流。</td><td><span class="badge">待升级</span></td></tr>
+              <tr><td><strong>可行性</strong></td><td>h5-ai-trading-feasibility-report.html</td><td>验证 research、技术判断、量化交易、通知、风控、安全、自我成长的可实现度。</td><td><span class="badge green">已完成</span></td></tr>
+              <tr><td><strong>需求打磨</strong></td><td>h5-ai-trading-requirements-three-rounds.html</td><td>八大能力的三轮需求拆解。</td><td><span class="badge green">已完成</span></td></tr>
+              <tr><td><strong>价值标准</strong></td><td>h5-ai-trading-10x-value-upgrade.html</td><td>定义 10 分价值：减少坏交易、知道最大亏损、等待、复盘、进化。</td><td><span class="badge green">最高标准</span></td></tr>
+              <tr><td><strong>总入口</strong></td><td>h5-ai-trading-final-output-index.html</td><td>本页面，作为所有输出的总索引和继续开发入口。</td><td><span class="badge blue">当前页</span></td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <section class="section" id="read-order">
         <div class="section-head">
           <div>
-            <h2>2. 推荐阅读顺序</h2>
+            <h2>3. 推荐阅读顺序</h2>
             <p>按这个顺序看，逻辑最顺。</p>
           </div>
           <span class="badge green">Read order</span>
@@ -587,11 +729,12 @@
             </thead>
             <tbody>
               <tr><td><strong>01</strong></td><td>H5 交易系统分析 v0.2</td><td>先确认 Excel 逻辑和 H5 价值，避免把它理解成单指标策略。</td></tr>
-              <tr><td><strong>02</strong></td><td>可行性报告</td><td>确认这些设想哪些能做、哪些不能第一版做。</td></tr>
-              <tr><td><strong>03</strong></td><td>10 分价值升级总纲</td><td>把“能做”升级成“值得长期做、不可替代、可复利”。</td></tr>
-              <tr><td><strong>04</strong></td><td>三轮需求打磨</td><td>把愿景拆成开发模块、状态机、数据模型和验收标准。</td></tr>
-              <tr><td><strong>05</strong></td><td>QuantDinger Research / PRD Workbench</td><td>看产品经理版流程和原型方向。</td></tr>
-              <tr><td><strong>06</strong></td><td>Pine 策略 + PRD v0.2</td><td>进入 TradingView 回测和开发文档迭代。</td></tr>
+              <tr><td><strong>02</strong></td><td>10 分价值升级总纲</td><td>先固定产品价值标准：少犯错、控亏损、会等待、能复盘、能进化。</td></tr>
+              <tr><td><strong>03</strong></td><td>PRD v0.3</td><td>看正式需求：P0 范围、页面、流程、数据对象、状态机和验收标准。</td></tr>
+              <tr><td><strong>04</strong></td><td>可行性报告</td><td>确认这些设想哪些能做、哪些不能第一版做。</td></tr>
+              <tr><td><strong>05</strong></td><td>三轮需求打磨</td><td>把八大能力拆成开发模块、状态机、数据模型和验收标准。</td></tr>
+              <tr><td><strong>06</strong></td><td>QuantDinger Research / PRD Workbench</td><td>看产品经理版流程和原型方向。</td></tr>
+              <tr><td><strong>07</strong></td><td>Pine 策略 + PRD v0.2</td><td>进入 TradingView 回测和历史开发文档对照。</td></tr>
             </tbody>
           </table>
         </div>
@@ -600,7 +743,7 @@
       <section class="section" id="product">
         <div class="section-head">
           <div>
-            <h2>3. 最终产品定义</h2>
+            <h2>4. 最终产品定义</h2>
             <p>一句话和模块化定义。</p>
           </div>
           <span class="badge amber">Product definition</span>
@@ -630,7 +773,7 @@
       <section class="section" id="principles">
         <div class="section-head">
           <div>
-            <h2>4. 必须保留的原则边界</h2>
+            <h2>5. 必须保留的原则边界</h2>
             <p>这是后续开发不能压缩错的重点。</p>
           </div>
           <span class="badge red">Non-negotiables</span>
@@ -666,7 +809,7 @@
       <section class="section" id="next">
         <div class="section-head">
           <div>
-            <h2>5. 下一步输出建议</h2>
+            <h2>6. 下一步输出建议</h2>
             <p>如果你确认这套整理没问题，就按下面顺序进入开发前最终文档。</p>
           </div>
           <span class="badge blue">Next outputs</span>
@@ -690,13 +833,13 @@
       <section class="section" id="feedback">
         <div class="section-head">
           <div>
-            <h2>6. 修改意见区</h2>
+            <h2>7. 修改意见区</h2>
             <p>你可以直接在这里写最后意见。</p>
           </div>
           <span class="badge green">Review notes</span>
         </div>
         <div class="section-body feedback">
-          <textarea id="notes" placeholder="例如：下一步先做 PRD v0.3；原型里要加账户状态机；Research 先接 Binance + TradingView；通知先做 Telegram。"></textarea>
+          <textarea id="notes" placeholder="例如：下一步先做 Architecture Spec v0.1；原型里要加账户状态机；Research 先接 Binance + TradingView；通知先做 Telegram。"></textarea>
           <div class="hint">备注保存在当前浏览器 localStorage，刷新后仍在。</div>
         </div>
       </section>

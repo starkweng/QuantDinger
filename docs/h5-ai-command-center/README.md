@@ -1,10 +1,14 @@
 # H5 AI Trading Command Center
 
-This folder records the first QuantDinger product research pass and a static prototype for adapting QuantDinger into Stark's H5 AI Trading Command Center.
+This folder records the QuantDinger product research pass, PRD, feasibility work, static prototype, and final delivery package for adapting QuantDinger into Stark's H5 AI Trading Command Center.
+
+Open first:
+
+- `h5-ai-trading-final-output-index.html` - final delivery package and review entry. It now includes the HTML requirement summary, artifact matrix, reading order, product definition, principles, and next-output plan.
 
 Artifacts:
 
-- `h5-ai-trading-final-output-index.html` - final delivery index linking the H5 v0.2 source package, Pine strategy, PRD, QuantDinger research, feasibility report, requirements refinement, and next-output plan.
+- `h5-ai-trading-final-output-index.html` - final delivery package linking the H5 v0.2 source package, Pine strategy, PRD v0.3, QuantDinger research, feasibility report, requirements refinement, and next-output plan.
 - `h5-ai-trading-10x-value-upgrade.html` - 10/10 value upgrade doctrine: trading flight-control system, risk discipline machine, decision ledger, self-improvement gates, and build-narrow scope.
 - `h5-ai-trading-prd-v0.3.html` - PRD v0.3 for the H5 AI Trading Flight Control MVP: P0 scope, screens, workflow, state gates, data objects, success metrics, and milestones.
 - `quantdinger-product-analysis-cn.md` - product research, module mapping, and adoption plan.
