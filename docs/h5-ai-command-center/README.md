@@ -6,6 +6,7 @@ Artifacts:
 
 - `h5-ai-trading-final-output-index.html` - final delivery index linking the H5 v0.2 source package, Pine strategy, PRD, QuantDinger research, feasibility report, requirements refinement, and next-output plan.
 - `h5-ai-trading-10x-value-upgrade.html` - 10/10 value upgrade doctrine: trading flight-control system, risk discipline machine, decision ledger, self-improvement gates, and build-narrow scope.
+- `h5-ai-trading-prd-v0.3.html` - PRD v0.3 for the H5 AI Trading Flight Control MVP: P0 scope, screens, workflow, state gates, data objects, success metrics, and milestones.
 - `quantdinger-product-analysis-cn.md` - product research, module mapping, and adoption plan.
 - `h5-ai-command-center-prototype.html` - first static prototype screen inspired by QuantDinger's left-nav quant workspace.
 - `h5-quantdinger-research-prd-workbench.html` - HTML research / product analysis / PRD / flowchart / prototype review workbench with an interactive feedback panel.
