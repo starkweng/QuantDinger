@@ -351,6 +351,7 @@
       <nav class="nav">
         <a class="active" href="#summary"><i></i><span>总裁结论</span></a>
         <a href="#assumptions"><i></i><span>假设验证</span></a>
+        <a href="#tenx"><i></i><span>10 分价值</span></a>
         <a href="#architecture"><i></i><span>产品架构</span></a>
         <a href="#strategy"><i></i><span>策略可行性</span></a>
         <a href="#data"><i></i><span>数据/API</span></a>
@@ -382,17 +383,44 @@
       <section class="section" id="summary">
         <div class="section-body hero-grid">
           <div class="hero-card">
-            <h2>结论：可做，而且值得做；但第一版必须是“可控交易指挥系统”，不是“全自动赚钱机器”。</h2>
-            <p>之前的设想大方向成立：QuantDinger 可以作为产品骨架，TradingAgents 可以作为多 agent 协作范式，H5 可以结构化为 StrategySpec + Scenario Planner + Risk Kernel + Execution Desk。真正要收紧的是边界：P0 做跨市场研究、H5 策略证据、风控、paper/shadow；真钱 API 和全市场自动交易必须后置。</p>
+            <h2>结论：可做，而且值得做；但 10 分版本必须是“交易飞控系统”，不是“全自动赚钱机器”。</h2>
+            <p>之前的设想大方向成立：QuantDinger 可以作为产品骨架，TradingAgents 可以作为多 agent 协作范式，H5 可以结构化为 StrategySpec + Scenario Planner + Risk Kernel + Execution Desk。基础版本可做到 8 分；要做到 10 分，必须进一步证明它能减少坏交易、控制最大亏损、沉淀复盘记忆，并持续生成可验证的改进候选。</p>
             <div class="callout">
-              本报告的核心判断：H5 的产品优势不是更快下单，而是更稳定地做到“看懂、推演、等待、认输、风控、复盘”。系统必须先能解释为什么不做，才有资格帮助你做。
+              本报告的核心判断：H5 的产品优势不是更快下单，而是更稳定地做到“看懂、推演、等待、认输、风控、复盘”。10 分价值不是让 AI 多下单，而是让系统每天帮你少做坏交易。
             </div>
           </div>
           <div class="verdict">
-            <div class="score"><span>Feasibility</span><b>7.8 / 10</b><small>限定 MVP 边界后可行。</small></div>
+            <div class="score"><span>Feasibility</span><b>8.0 / 10</b><small>限定 MVP 边界后可行。</small></div>
+            <div class="score"><span>10X Condition</span><b>Flight Control</b><small>证明少犯错和控亏损。</small></div>
             <div class="score"><span>First Release</span><b>Signal + Paper</b><small>不建议第一版 live auto。</small></div>
             <div class="score"><span>Hard Gate</span><b>Risk Kernel</b><small>确定性规则，不能让 LLM 覆盖。</small></div>
-            <div class="score"><span>Use Case</span><b>Stark 私人工具</b><small>先自用验证，再考虑产品化开放。</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tenx">
+        <div class="section-head">
+          <div>
+            <h2>1.1 如何从 8 分可行升级到 10 分值得做</h2>
+            <p>10 分不是功能扩张，而是价值闭环加深。</p>
+          </div>
+          <span class="badge green">10/10 value</span>
+        </div>
+        <div class="section-body">
+          <table>
+            <thead>
+              <tr><th>维度</th><th>8 分可行</th><th>10 分值得做</th><th>验收证据</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Research</td><td>能收集和总结信息</td><td>能形成有来源、反方观点、交易影响和过期提示的证据包</td><td>source_evidence + decision_packet</td></tr>
+              <tr><td>H5 判断</td><td>能打分和给信号</td><td>能解释为什么等、为什么不做、哪里失效、最多亏多少</td><td>scenario_plan + invalidation + max_loss</td></tr>
+              <tr><td>风控</td><td>能设置止损和仓位</td><td>能账户级降级、冻结、利润锁定、策略预算耗尽后停止</td><td>risk_event + account_state</td></tr>
+              <tr><td>执行</td><td>能生成 paper/order intent</td><td>能处理过期、部分成交、撤单失败、异常冻结和审计追踪</td><td>execution_event + reconciler</td></tr>
+              <tr><td>成长</td><td>能写复盘</td><td>能每周生成候选改进，并强制 backtest/paper/shadow 验证</td><td>reflection_entry + promotion_gate</td></tr>
+            </tbody>
+          </table>
+          <div class="callout green">
+            10 分产品的北极星指标不是信号数量，而是 Bad Trade Avoided、Max Loss Known、Risk Rejection Quality、Review-to-Improvement Conversion。也就是：少做坏交易、每单亏损可知、拒绝有质量、复盘能进化。
           </div>
         </div>
       </section>

@@ -700,6 +700,7 @@
       </div>
       <nav class="nav" id="nav">
         <a class="active" href="#summary"><i></i><span>文档总览</span></a>
+        <a href="#tenx"><i></i><span>10 分升级</span></a>
         <a href="#problem"><i></i><span>问题定义</span></a>
         <a href="#research"><i></i><span>QuantDinger 调研</span></a>
         <a href="#h5"><i></i><span>H5 理解</span></a>
@@ -721,7 +722,7 @@
       <header class="topbar">
         <div>
           <h1>H5 x QuantDinger 产品调研、产品分析、PRD 与原型工作台</h1>
-          <p>这版加入网络资料与多 agent 可行性验证：先证明能落地，再进入 Figma 和开发。</p>
+          <p>这版升级为 10 分价值口径：先证明它能减少坏交易、控制亏损、沉淀复盘，再进入 Figma 和开发。</p>
         </div>
         <div class="top-actions">
           <button data-jump="#prototype">看原型</button>
@@ -733,11 +734,11 @@
       <section class="section" id="summary">
         <div class="section-body doc-meta">
           <div class="summary-panel">
-            <h2>结论：QuantDinger 适合作为量化工作台骨架，H5 负责把“会不会交易”变成系统能力。</h2>
-            <p>QuantDinger 已经证明一件事：研究、指标、策略、回测、实盘、账户和 Agent 权限可以放到一个自托管平台内。我们要抄的不是表面导航，而是这个完整产品闭环。H5 要补的是它没有的交易哲学和风控纪律：不预测、先推演、先认输、少下单、只在风控允许且盈亏比合格时行动。</p>
+            <h2>结论：QuantDinger 适合作为量化工作台骨架，H5 负责把“会不会交易”升级成交易飞控能力。</h2>
+            <p>QuantDinger 已经证明一件事：研究、指标、策略、回测、实盘、账户和 Agent 权限可以放到一个自托管平台内。我们要抄的不是表面导航，而是这个完整产品闭环。H5 要补的是它没有的交易哲学和风控纪律：不预测、先推演、先认输、少下单、只在风控允许且盈亏比合格时行动。10 分版本还必须证明：它能长期减少坏交易、锁住最大亏损，并把复盘变成系统进化。</p>
             <div class="thesis-list">
-              <div class="thesis"><b>产品定位</b><span>AI 主动交易指挥中心，不是单一指标机器人。</span></div>
-              <div class="thesis"><b>核心价值</b><span>让研究、推演、风控、执行、复盘形成闭环。</span></div>
+              <div class="thesis"><b>产品定位</b><span>AI Trading Flight Control System，不是单一指标机器人。</span></div>
+              <div class="thesis"><b>核心价值</b><span>让研究、推演、风控、执行、复盘形成可进化闭环。</span></div>
               <div class="thesis"><b>设计原则</b><span>先限制错误，再追求收益；先等待，再下单。</span></div>
               <div class="thesis"><b>开发顺序</b><span>HTML 确认信息架构后，再进入 Figma 和前端开发。</span></div>
             </div>
@@ -749,6 +750,35 @@
             <div class="meta-item"><span>Decision</span><b>HTML first, Figma later</b></div>
             <div class="meta-item"><span>Borrow From</span><b>QuantDinger framework</b></div>
             <div class="meta-item"><span>Must Preserve</span><b>H5 Excel logic</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tenx">
+        <div class="section-head">
+          <div>
+            <h2>0. 10 分价值升级：从交易工作台到交易飞控系统</h2>
+            <p>这不是增加几个功能，而是改变产品的第一性指标。</p>
+          </div>
+          <span class="badge green">10/10 value</span>
+        </div>
+        <div class="section-body">
+          <div class="three-col">
+            <div class="panel">
+              <h3>10 分价值定义</h3>
+              <p>每天减少坏交易、控制最大亏损、等待高盈亏比、记录每次判断、每周生成可验证的策略改进候选。</p>
+            </div>
+            <div class="panel">
+              <h3>产品第一性指标</h3>
+              <p>Bad Trade Avoided、Max Loss Known、Risk Rejection Quality、Scenario Prepared、Review-to-Improvement Conversion。</p>
+            </div>
+            <div class="panel">
+              <h3>P0 重新压缩</h3>
+              <p>Research Evidence、H5 StrategySpec、Scenario Planner、Risk Kernel、Signal/Paper、Decision Ledger、Weekly Review。</p>
+            </div>
+          </div>
+          <div class="callout">
+            如果一个模块不能帮助“少犯错、控亏损、会等待、可复盘、会进化”，就不进入 P0。10 分产品不是更花，而是更狠、更窄、更有纪律。
           </div>
         </div>
       </section>
@@ -785,7 +815,7 @@
             </div>
             <div class="panel shaded">
               <h3>第一性指标</h3>
-              <p>不是信号数量，而是净收益、最大回撤、单笔最大亏损可控率、风控拒绝后的误伤率、以及等待纪律。</p>
+              <p>不是信号数量，而是 Bad Trade Avoided、最大回撤、单笔最大亏损可知率、风控拒绝质量、等待纪律、复盘转化率。</p>
             </div>
           </div>
         </div>

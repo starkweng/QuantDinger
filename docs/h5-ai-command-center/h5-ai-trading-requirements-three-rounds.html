@@ -485,6 +485,7 @@
       </div>
       <nav class="nav">
         <a class="active" href="#summary"><i></i><span>总裁结论</span></a>
+        <a href="#tenx"><i></i><span>10 分标准</span></a>
         <a href="#rounds"><i></i><span>三轮打磨</span></a>
         <a href="#capabilities"><i></i><span>八大能力</span></a>
         <a href="#architecture"><i></i><span>系统架构</span></a>
@@ -507,7 +508,7 @@
       <header class="topbar">
         <div>
           <h1>H5 AI Trading Command Center 三轮需求打磨</h1>
-          <p>目标：把 research、技术判断、量化交易、通知、自我交易、风控资管、安全、自我成长变成可开发需求。</p>
+          <p>目标：把 research、技术判断、量化交易、通知、自我交易、风控资管、安全、自我成长升级成 10 分交易飞控需求。</p>
         </div>
         <div class="top-actions">
           <a href="#capabilities">看八大能力</a>
@@ -518,17 +519,58 @@
       <section class="section" id="summary">
         <div class="section-body hero-grid">
           <div class="hero-card">
-            <h2>结论：这套系统能做，但必须做成“受控自驱交易系统”，不是“自由自嗨交易机器人”。</h2>
-            <p>八大能力可以形成闭环：Research 负责信息处理，技术判断负责市场结构和工程可执行性，量化交易负责规则化验证，实时通知负责触达与审批，自我交易负责受控执行，风控资管负责最大亏损边界，安全保障负责权限与密钥，自我成长负责复盘和策略晋级。核心原则是：AI 可以越来越会判断，但不能越来越自由地下真钱单。</p>
+            <h2>结论：这套系统能做，但 10 分版本必须做成“交易飞控系统”，不是“自由自嗨交易机器人”。</h2>
+            <p>八大能力可以形成闭环：Research 负责信息处理，技术判断负责市场结构和工程可执行性，量化交易负责规则化验证，实时通知负责触达与审批，自我交易负责受控执行，风控资管负责最大亏损边界，安全保障负责权限与密钥，自我成长负责复盘和策略晋级。核心原则是：AI 可以越来越会判断，但不能越来越自由地下真钱单；系统越聪明，风控和审计越要硬。</p>
             <div class="callout">
               最重要的需求定义：系统不仅要告诉你“做什么”，还要高质量地告诉你“为什么不做”。不交易、等价格走到预案点、认输退出，都是一等公民能力。
             </div>
           </div>
           <div class="metric-grid">
-            <div class="metric"><span>Product Shape</span><b>Command Center</b><small>研究、策略、风控、执行、复盘一体。</small></div>
+            <div class="metric"><span>Product Shape</span><b>Flight Control</b><small>交易飞控，不是交易机器人。</small></div>
             <div class="metric"><span>First Mode</span><b>Signal + Paper</b><small>先证明工作流，不急着真钱。</small></div>
             <div class="metric"><span>Hard Gate</span><b>Risk Kernel</b><small>所有交易动作先过确定性风控。</small></div>
-            <div class="metric"><span>Growth Loop</span><b>Evidence Driven</b><small>升级靠结果证据，不靠模型自信。</small></div>
+            <div class="metric"><span>10X Loop</span><b>Bad Trade Avoided</b><small>先减少坏交易，再追求多交易。</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tenx">
+        <div class="section-head">
+          <div>
+            <h2>0. 10 分价值需求标准</h2>
+            <p>所有模块都要服务真实交易质量，而不是服务功能清单。</p>
+          </div>
+          <span class="badge violet">10/10 requirement</span>
+        </div>
+        <div class="section-body">
+          <div class="grid-3">
+            <div class="panel">
+              <h3>第一价值：少犯错</h3>
+              <p>系统必须能识别并阻止冲动交易、过度交易、重仓、信号过期、连续亏损后继续交易。</p>
+            </div>
+            <div class="panel">
+              <h3>第二价值：控亏损</h3>
+              <p>每个 order intent 必须先算 max_loss，并关联账户状态、策略预算、日损和连续亏损降级。</p>
+            </div>
+            <div class="panel">
+              <h3>第三价值：会等待</h3>
+              <p>Scenario Planner 必须把“不做、等、降级、冻结”作为一等 action，而不是只生成买卖点。</p>
+            </div>
+            <div class="panel">
+              <h3>第四价值：可复盘</h3>
+              <p>Decision Ledger 必须记录每次信号、拒绝、等待、止损、错过机会和用户反馈。</p>
+            </div>
+            <div class="panel">
+              <h3>第五价值：会进化</h3>
+              <p>Growth Curator 只能生成候选版本，必须经过 backtest、paper、shadow 和人工批准后晋级。</p>
+            </div>
+            <div class="panel">
+              <h3>第六价值：私有优势</h3>
+              <p>H5 Excel、你的交易哲学、多 agent research 和真实复盘数据要沉淀成别人难复制的情境库。</p>
+            </div>
+          </div>
+          <div class="callout green">
+            10 分验收指标：Bad Trade Avoided、Max Loss Known、Risk Rejection Quality、Scenario Prepared、Review-to-Improvement Conversion。后续 PRD v0.3 必须围绕这些指标写。
           </div>
         </div>
       </section>
@@ -553,12 +595,12 @@
             </div>
             <div class="round">
               <div><span>Round 3</span><b>验收开发</b></div>
-              <p>把需求变成可开发路径：P0 做只读数据、research packet、H5 评分、场景推演、Risk Kernel、通知和 paper；P1 做 Pine/Python 回测一致性、shadow、半自动挂单草稿；P2 才做小额白名单 live；P3 才谈多市场自动交易。</p>
+              <p>把需求变成可开发路径：P0 只做最能证明 10 分价值的窄闭环：research packet、H5 评分、场景推演、Risk Kernel、通知、paper、Decision Ledger、Weekly Review；P1 做 Pine/Python 回测一致性、shadow、半自动挂单草稿；P2 才做小额白名单 live；P3 才谈多市场自动交易。</p>
             </div>
           </div>
 
           <div class="callout amber">
-            三轮打磨后的产品判断：第一版不是追求功能全，而是追求纪律强。一个能每天帮你少犯错、少乱做、少重仓、少追涨杀跌的系统，比一个会生成很多信号的系统更有价值。
+            三轮打磨后的产品判断：第一版不是追求功能全，而是追求纪律强。一个能每天帮你少犯错、少乱做、少重仓、少追涨杀跌的系统，比一个会生成很多信号的系统更有价值。10 分版本必须先证明“少做坏交易”，再证明“多抓好交易”。
           </div>
         </div>
       </section>
